@@ -1,0 +1,41 @@
+<html>
+<body style="margin: 35px">
+<input id="messageField" type="text">
+
+<div id="msg-box" style="width:500px; height: 400px; background: #eee; overflow:auto;"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    var webSocket = new WebSocket("ws://localhost:8080/StripeDemo/myHandler");
+    var msgField = document.getElementById("messageField");
+    var divMsg = document.getElementById("msg-box");
+    $(document).ready(function(){
+        webSocket.onmessage = function(message) {
+            divMsg.innerHTML += "Server> : " + message.data;
+        };
+        webSocket.onopen = function() {
+            console.log("connection opened");
+        };
+        webSocket.onclose = function() {
+            console.log("connection closed");
+        };
+        webSocket.onerror = function wserror(message) {
+            console.log("error: " + message);
+        };
+    });
+
+
+
+
+
+
+    document.getElementById("messageField")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                sendMsg();
+            }
+        });
+</script>
+</body>
+</html>
