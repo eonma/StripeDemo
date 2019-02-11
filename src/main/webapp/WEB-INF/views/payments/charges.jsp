@@ -196,585 +196,156 @@
             <div class="container">
                 <div class="content-heading clearfix">
                     <div class="heading-left">
-                        <h1 class="page-title-st">Create a charge</h1>
+                        <h1 class="page-title-st">PaymentIntent</h1>
                     </div>
                     <ul class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                        <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
                         <li><a href="#">Payments</a></li>
-                        <li class="active">Create a charge</li>
+                        <li class="active">PaymentIntent</li>
                     </ul>
                 </div>
                 <div class="row">
-                    <!-- API panel -->
-                    <div class="panel">
+
+                    <div class="panel panel-tab">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Create a Payment Intent - server side</h3>
+                            <ul class="nav nav-tabs pull-right">
+                                <li id="tabReq" class="active"><a href="#reqTab" data-toggle="tab"></i> REQUEST</a></li>
+                                <li id="tabRes"><a href="#resTab" data-toggle="tab"></i> RESPONSE </a></li>
+                            </ul>
+                        </div>
                         <div class="panel-body">
+                            <div class="tab-content no-padding">
+                                <div class="tab-pane fade in active" id="reqTab">
+                                    <form:form class="form-horizontal" id="create_charge" method="post" action="create_pi" modelAttribute="chargeParam">
+                                        <div class="project-info">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label"><b>allowed_source_type</b></label>
+                                                        <div class="col-sm-8">
+                                                            <form:input path="source" class="form-control" id="source" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label"><b>amount</b></label>
+                                                        <div class="col-sm-8">
+                                                            <form:input path="amount" class="form-control" id="amount" />
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                            <form:form class="form-horizontal" id="create_charge" method="post" action="create_charge" modelAttribute="chargeParam">
-                            <div class="project-info">
-                                <h3 class="info-heading">REQUEST</h3>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label"><b>currency</b></label>
+                                                        <div class="col-sm-8">
+                                                            <form:input path="currency" type="text" class="form-control" id="currency" value="${pi.currency}"/>
+                                                        </div>
+                                                    </div>
 
-                                <div class="row">
-
-                                    <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="col-sm-4 control-label">amount</label>
-                                                <div class="col-sm-8">
-                                                    <form:input path="amount" type="text" class="form-control" id="amount" value="${chargeParam.amount}"/>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-4 control-label">currency</label>
-                                                <div class="col-sm-8">
-                                                    <form:input path="currency" type="text" class="form-control" id="currency" value="${chargeParam.currency}"/>
+                                        </div>
+                                        <div class="project-info connect" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">receipt_email</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" id="receipt_email" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">customer</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" id="customer">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">statement_descriptor</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" id="statement_descriptor">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">description</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" id="description" value="${pi.metadata}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">shipping</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 col-sm-offset-1 control-label">name</label>
+                                                        <div class="col-sm-7">
+                                                            <form:input path="shipping['name']" type="text" class="form-control" id="name"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 col-sm-offset-1 control-label">address</label>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 col-sm-offset-2 control-label">line1</label>
+                                                        <div class="col-sm-6">
+                                                            <form:input path="shipping['address']" type="text" class="form-control" id="name" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">source</label>
-                                            <div class="col-sm-8">
-                                                <form:input path="source" type="ExternalAccount" class="form-control" id="source" value="${chargeParam.source}"/>
-                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="project-info">
+                                            <div class="panel-group project-accordion">
+                                                <!-- project milestone -->
+                                                <div class="panel project-milestone">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a href="#collapse1" data-toggle="collapse" data-parent="#accordion" class="collapsed">
+                                                                <span class="milestone-title"> Optional parameters </span>
+                                                                <i class="fa fa-plus-circle toggle-icon"></i>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div id="collapse1" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-4 control-label">metadata.order</label>
+                                                                        <div class="col-sm-8">
+                                                                            <form:input path="metadata['order']" class="form-control" id="allowedSourceTypes" value="${pi.metadata.get('order')}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">capture</label>
-                                            <div class="col-sm-8">
-                                                <form:select path="capture" id="capture" class="form-control">
-                                                    <form:option value="true">true</form:option>
-                                                    <form:option value="false">false</form:option>
-                                                </form:select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">customer</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="customer" placeholder="GB">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-6 control-label">statement_descriptor</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" id="statement_descriptor" placeholder="GB">
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="col-sm-6 control-label">description</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" id="description">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end project milestone -->
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-6 control-label">receipt_email</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" id="receipt_email"
-                                                       placeholder="GB">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-6 control-label">shipping</label>
-                                            <div class="col-sm-6">
-                                                <form:input path="shipping['address']" type="text" class="form-control" id="name" value="${chargeParam.shipping[address['line1']]}"/>
-                                            </div>
-                                        </div>
-                                    </div>
 
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 col-md-offset-8">
+                                                <button type="submit" class="btn btn-primary-stripe-blue">Submit Request</button>
+                                            </div>
+                                        </div>
+
+                                    </form:form>
                                 </div>
 
-
-
-
-
-
-
-                                <div class="panel-group project-accordion">
-                                    <!-- project milestone -->
-                                    <div class="panel project-milestone">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a href="#collapse1" data-toggle="collapse" data-parent="#accordion">
-                                                    <span class="milestone-title"><i
-                                                            class="fa fa-check icon-indicator text-success"></i> Research on eCommerce Trends</span>
-
-                                                    <i class="fa fa-minus-circle toggle-icon"></i>
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapse1" class="panel-collapse collapse in">
-                                            <div class="panel-body">
-                                                <div class="milestone-section">
-                                                    <h4 class="milestone-heading">DESCRIPTION</h4>
-                                                    <p class="milestone-description">Velit elitr dolore eu pri, ut has
-                                                        vero imperdiet dissentiet, sit magna blandit reformidans in.
-                                                        Alia commune disputationi vis no, natum rebum melius in ius.</p>
-                                                </div>
-                                                <div class="milestone-section layout-table project-metrics">
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE START</span>
-                                                            <span class="value">Jul 23, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE END</span>
-                                                            <span class="value">Aug 01, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">EST. VALUE</span>
-                                                            <span class="value">$1,200</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DELIVERABLE</span>
-                                                            <span class="value">
-																			<i class="fa fa-file-pdf-o"></i>
-																			<a href="#">Research_FINAL.pdf</a>
-																		</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="milestone-section">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-striped table-project-tasks">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>TASK</th>
-                                                                <th>DEADLINE</th>
-                                                                <th>PROGRESS</th>
-                                                                <th>ACTIONS</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <tr>
-                                                                <td colspan="4" class="divider">COMPLETED TASK</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <span class="task-indicator success"></span>
-                                                                    Functional Specs
-                                                                </td>
-                                                                <td>Jul 30, 2017</td>
-                                                                <td>100%</td>
-                                                                <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <span class="task-indicator success"></span> Design
-                                                                    Specs
-                                                                </td>
-                                                                <td>Aug 01, 2017</td>
-                                                                <td>100%</td>
-                                                                <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="panel-footer">
-                                                <a href="#" class="btn btn-default"><i class="fa fa-pencil"></i> EDIT
-                                                    MILESTONE</a>
-                                                <a href="#" class="btn btn-default"><i class="fa fa-cloud-upload"></i>
-                                                    UPLOAD</a>
-                                                <a href="#" class="btn btn-success"><i class="fa fa-file"></i> VIEW
-                                                    INVOICE</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end project milestone -->
-                                    <!-- project milestone -->
-                                    <div class="panel project-milestone">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a href="#collapse2" data-toggle="collapse" data-parent="#accordion"
-                                                   class="collapsed" aria-expanded="false">
-                                                    <span class="milestone-title"><i
-                                                            class="fa fa-check icon-indicator text-success"></i> Business Requirements</span>
-                                                    <span class="label label-danger label-transparent">DUE</span>
-                                                    <i class="fa toggle-icon fa-plus-circle"></i>
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapse2" class="panel-collapse collapse" style="height: 0px;"
-                                             aria-expanded="false">
-                                            <div class="panel-body">
-                                                <div class="milestone-section">
-                                                    <h4 class="milestone-heading">DESCRIPTION</h4>
-                                                    <p class="milestone-description">Velit elitr dolore eu pri, ut has
-                                                        vero imperdiet dissentiet, sit magna blandit reformidans in.
-                                                        Alia commune disputationi vis no, natum rebum melius in ius.</p>
-                                                </div>
-                                                <div class="milestone-section layout-table project-metrics">
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE START</span>
-                                                            <span class="value">Aug 01, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE END</span>
-                                                            <span class="value">Sep 15, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">EST. VALUE</span>
-                                                            <span class="value">$15,600</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DELIVERABLE</span>
-                                                            <span class="value">
-																			<i class="fa fa-file-archive-o"></i>
-																			<a href="#">BusinessReqs_FINAL.zip</a>
-																		</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="milestone-section">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-striped table-project-tasks">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>TASK</th>
-                                                                <th>DEADLINE</th>
-                                                                <th>PROGRESS</th>
-                                                                <th>ACTIONS</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <tr>
-                                                                <td colspan="4" class="divider">COMPLETED TASK</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <span class="task-indicator success"></span>
-                                                                    Functional Gathering
-                                                                </td>
-                                                                <td>Jul 30, 2017</td>
-                                                                <td>100%</td>
-                                                                <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <span class="task-indicator success"></span>
-                                                                    Features and Specs
-                                                                </td>
-                                                                <td>Aug 10, 2017</td>
-                                                                <td>100%</td>
-                                                                <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                </td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="panel-footer">
-                                                <a href="#" class="btn btn-default"><i class="fa fa-pencil"></i> EDIT
-                                                    MILESTONE</a>
-                                                <a href="#" class="btn btn-default"><i class="fa fa-cloud-upload"></i>
-                                                    UPLOAD</a>
-                                                <a href="#" class="btn btn-success"><i class="fa fa-file"></i> VIEW
-                                                    INVOICE</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end project milestone -->
-                                    <!-- project milestone -->
-                                    <div class="panel project-milestone">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a href="#collapse3" data-toggle="collapse" data-parent="#accordion"
-                                                   class="collapsed" aria-expanded="false">
-                                                    <span class="milestone-title"><i
-                                                            class="fa fa-spinner icon-indicator custom-text-blue3"></i> Phase 1 Project Delivery</span>
-                                                    <span class="note">7 days until deadline</span>
-                                                    <i class="fa toggle-icon fa-plus-circle"></i>
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapse3" class="panel-collapse collapse" style="height: 0px;"
-                                             aria-expanded="false">
-                                            <div class="panel-body">
-                                                <div class="milestone-section">
-                                                    <h4 class="milestone-heading">DESCRIPTION</h4>
-                                                    <p class="milestone-description">Velit elitr dolore eu pri, ut has
-                                                        vero imperdiet dissentiet, sit magna blandit reformidans in.
-                                                        Alia commune disputationi vis no, natum rebum melius in ius.</p>
-                                                </div>
-                                                <div class="milestone-section layout-table project-metrics">
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE START</span>
-                                                            <span class="value">Jul 23, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DATE END</span>
-                                                            <span class="value">Oct 01, 2017</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">EST. VALUE</span>
-                                                            <span class="value">$21,847</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cell">
-                                                        <div class="main-info-item">
-                                                            <span class="title">DELIVERABLE</span>
-                                                            <span class="value">
-																			<i class="fa fa-file-archive-o"></i>
-																			<a href="#">project_source_main.zip</a>
-																		</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="panel-footer">
-                                                <a href="#" class="btn btn-default"><i class="fa fa-pencil"></i> EDIT
-                                                    MILESTONE</a>
-                                                <a href="#" class="btn btn-default"><i class="fa fa-cloud-upload"></i>
-                                                    UPLOAD</a>
-                                                <a href="#" class="btn btn-success"><i class="fa fa-file"></i> CREATE
-                                                    INVOICE</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end project milestone -->
-                                    <c:if test = "${charge.amount != null}">
-                                        <!-- project milestone -->
-                                        <div class="panel project-milestone">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">
-                                                    <a href="#collapse4" data-toggle="collapse" data-parent="#accordion"
-                                                       class="collapsed">
-                                                    <span class="milestone-title"><i
-                                                            class="fa fa-spinner icon-indicator custom-text-blue3"></i> UI Design</span>
-                                                        <i class="fa fa-minus-circle toggle-icon"></i>
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse4" class="panel-collapse collapse in">
-                                                <div class="panel-body">
-                                                    <div class="milestone-section">
-                                                        <h4 class="milestone-heading">DESCRIPTION</h4>
-                                                        <p class="milestone-description">Velit elitr dolore eu pri, ut has
-                                                            vero imperdiet dissentiet, sit magna blandit reformidans in.
-                                                            Alia commune disputationi vis no, natum rebum melius in ius.</p>
-                                                    </div>
-                                                    <div class="milestone-section layout-table project-metrics">
-                                                        <div class="cell">
-                                                            <div class="main-info-item">
-                                                                <span class="title">DATE START</span>
-                                                                <span class="value">Jul 23, 2017</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="cell">
-                                                            <div class="main-info-item">
-                                                                <span class="title">DATE END</span>
-                                                                <span class="value">Oct 01, 2017</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="cell">
-                                                            <div class="main-info-item">
-                                                                <span class="title">EST. VALUE</span>
-                                                                <span class="value">$21,847</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="cell">
-                                                            <div class="main-info-item">
-                                                                <span class="title">DELIVERABLE</span>
-                                                                <span class="value">
-																			<i class="fa fa-file-archive-o"></i>
-																			<a href="#">project_source_main.zip</a>
-																		</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="milestone-section">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-striped table-project-tasks">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>TASK</th>
-                                                                    <th>DEADLINE</th>
-                                                                    <th>PROGRESS</th>
-                                                                    <th>ACTIONS</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="task-indicator warning"></span>
-                                                                        Wireframing
-                                                                    </td>
-                                                                    <td>Jul 27, 2017
-                                                                        <span class="text-muted">(9 days)</span>
-                                                                    </td>
-                                                                    <td>95%</td>
-                                                                    <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="task-indicator warning"></span> Create
-                                                                        style guide
-                                                                    </td>
-                                                                    <td>Jul 23, 2017
-                                                                        <span class="text-muted">(2 days)</span>
-                                                                    </td>
-                                                                    <td>75%</td>
-                                                                    <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="task-indicator danger"></span> Design
-                                                                        Draft
-                                                                    </td>
-                                                                    <td>Jul 12, 2017
-                                                                        <span class="text-danger">(+5 days)</span>
-                                                                    </td>
-                                                                    <td>80%</td>
-                                                                    <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td colspan="4" class="divider">COMPLETED TASK</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="task-indicator success"></span>
-                                                                        Functional Specs
-                                                                    </td>
-                                                                    <td>Jul 27, 2017</td>
-                                                                    <td>100%</td>
-                                                                    <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="task-indicator success"></span> Design
-                                                                        Specs
-                                                                    </td>
-                                                                    <td>Jul 27, 2017</td>
-                                                                    <td>100%</td>
-                                                                    <td>
-																					<span class="actions">
-																						<a href="#"><i
-                                                                                                class="fa fa-eye"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-pencil"></i></a>
-																						<a href="#"><i
-                                                                                                class="fa fa-trash"></i></a>
-																					</span>
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel-footer">
-                                                    <a href="#" class="btn btn-default"><i class="fa fa-pencil"></i> EDIT
-                                                        MILESTONE</a>
-                                                    <a href="#" class="btn btn-default"><i class="fa fa-cloud-upload"></i>
-                                                        UPLOAD</a>
-                                                    <a href="#" class="btn btn-success"><i class="fa fa-file"></i> CREATE
-                                                        INVOICE</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- end project milestone -->
-                                    </c:if>
-
+                                <div class="tab-pane fade" id="resTab">
+                                    <h5>Create Payment Intent Response</h5>
+                                    ${pi.toJson()}
                                 </div>
+
                             </div>
-                                <button type="submit" class="btn btn-primary">Submit Request</button>
-                            </form:form>
                         </div>
                     </div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -910,18 +481,31 @@
 <script src="<c:url value="/resources/scripts/klorofilpro-common.js"/>"></script>
 
 <script>
+
     $(function()
     {
-        // metric's progress bar
-        $('.progress-bar').progressbar(
-            {
-                display_text: 'fill'
-            });
         // accordion toggle collapse
         $('.project-accordion [data-toggle="collapse"]').on('click', function()
         {
             $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
         });
+
+        // show connect parameters
+        var isConnect = ${isConnect};
+        if (isConnect){
+            $('.connect').show();
+        }
+
+        // show response params
+        var isResponse = ${isResponse};
+        if (isResponse) {
+            $('#tabReq').toggleClass('active');
+            $('#tabRes').toggleClass('active');
+            $('#reqTab').toggleClass('active in');
+            $('#resTab').toggleClass('active in');
+        }
+
+
     });
 </script>
 </body>

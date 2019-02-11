@@ -17,7 +17,7 @@
 
 <html lang="en">
 <head>
-    <title>Welcome to Klorofil Pro | Klorofil Pro - Bootstrap Admin Dashboard Template</title>
+    <title>Stripe API playground</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <!-- VENDOR CSS -->
@@ -198,14 +198,15 @@
             <div class="container">
                 <div class="content-heading clearfix">
                     <div class="heading-left">
-                        <h1 class="page-title-st">Dashboard</h1>
-                        <p class="page-subtitle">Stripe API playground dashboard</p>
+                        <h1 class="page-title-st">Stripe API playground</h1>
                     </div>
                     <ul class="breadcrumb">
                         <li><i class="fa fa-home"></i> Home</li>
                         <li class="active">Dashboard</li>
                     </ul>
                 </div>
+
+                <br>
                 <div class="row">
                     <div class="col-md-9">
                         <!-- METRICS -->

@@ -1562,12 +1562,12 @@ pre {
   margin: 0 0 10px;
   font-size: 13px;
   line-height: 1.42857143;
-  color: #333;
+  /*color: #333;*/
   word-break: break-all;
   word-wrap: break-word;
-  background-color: #f5f5f5;
+  /*background-color: #f5f5f5;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 4px;*/
 }
 pre code {
   padding: 0;
@@ -2518,7 +2518,7 @@ input[type="search"] {
 }
 input[type="radio"],
 input[type="checkbox"] {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   margin-top: 1px \9;
   line-height: normal;
 }
@@ -3033,7 +3033,7 @@ select[multiple].input-lg {
 .btn:hover,
 .btn:focus,
 .btn.focus {
-  color: #333;
+  /*color: #333;*/
   text-decoration: none;
 }
 .btn:active,
