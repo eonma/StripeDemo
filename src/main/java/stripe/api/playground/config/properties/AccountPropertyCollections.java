@@ -1,5 +1,7 @@
 package stripe.api.playground.config.properties;
 
+import stripe.api.playground.util.JSONFormatter;
+
 import java.util.List;
 
 /**
@@ -17,5 +19,14 @@ public class AccountPropertyCollections {
 
     public void setAccountPropertiesList(List<AccountProperties> accountPropertiesList) {
         this.accountPropertiesList = accountPropertiesList;
+    }
+
+    /**
+     * Returns a JSON string corresponding to object state
+     *
+     * @return JSON representation
+     */
+    public String toJSON() {
+        return JSONFormatter.toJSON(this);
     }
 }

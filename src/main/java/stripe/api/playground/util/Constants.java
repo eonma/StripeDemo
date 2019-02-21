@@ -7,10 +7,10 @@ package stripe.api.playground.util;
 public class Constants {
 
     // API keys
-    public static final String GB_PAYMENT_PK = "pk_test_1xnx7cgl5GI19qFxg3bOcBD5";
-    public static final String GB_PAYMENT_SK = "sk_test_9wTiIIE9XtvLgbrpMVSVJrIS";
-    public static final String GB_CONNECT_PK = "pk_test_zKiUvTSQ3Orgh2ht3lC4LXQp";
-    public static final String GB_CONNECT_SK = "sk_test_qNNaRWg2lJJKUelm0yqmA1su";
+    //public static final String GB_PAYMENT_PK = "pk_test_1xnx7cgl5GI19qFxg3bOcBD5";
+    //public static final String GB_PAYMENT_SK = "sk_test_9wTiIIE9XtvLgbrpMVSVJrIS";
+    //public static final String GB_CONNECT_PK = "pk_test_zKiUvTSQ3Orgh2ht3lC4LXQp";
+    //public static final String GB_CONNECT_SK = "sk_test_qNNaRWg2lJJKUelm0yqmA1su";
 
     // Properties key
     public static final String PROPERTIES_ACCOUNT_PREFIX = "stripe.account";
@@ -29,7 +29,8 @@ public class Constants {
     public static final String DB_PASSWORD = "z5i27lo4s7p0ni1h";
 
     // view path
-    public static final String CREATE_PAYMENT_INTENT_VIEW = "payments/create-paymentintent";
+    //public static final String CREATE_PAYMENT_INTENT_VIEW = "payments/create-paymentintent";
+    public static final String PAYMENT_INTENT_VIEW = "payments/paymentintent";
     public static final String CREATE_CONNECT_ACCOUNT_VIEW = "connect/create-account";
     public static final String LIST_CUSTOMER_VIEW = "customer/list-customer";
     public static final String LIST_PRODUCT_VIEW = "billing/product";
@@ -37,5 +38,6 @@ public class Constants {
     public static final String CREATE_SUB_VIEW = "billing/subscription";
     public static final String LIST_SUB_VIEW = "billing/list-subscriptions";
     public static final String SHOW_WEBHOOK = "webhook/webhook";
+    public static final String ADD_ACCOUNT_VIEW = "add-account";
 
 }

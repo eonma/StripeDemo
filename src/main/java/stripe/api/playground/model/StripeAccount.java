@@ -1,5 +1,6 @@
 package stripe.api.playground.model;
 
+import stripe.api.playground.config.properties.AccountProperties;
 import stripe.api.playground.util.JSONFormatter;
 
 /**
@@ -8,32 +9,14 @@ import stripe.api.playground.util.JSONFormatter;
  */
 
 public class StripeAccount {
-    private String publish_key;
-    private String secret_key;
-    private String account_name;
+    private AccountProperties accountProperties;
 
-    public String getPublish_key() {
-        return publish_key;
+    public AccountProperties getAccountProperties() {
+        return accountProperties;
     }
 
-    public void setPublish_key(String publish_key) {
-        this.publish_key = publish_key;
-    }
-
-    public String getSecret_key() {
-        return secret_key;
-    }
-
-    public void setSecret_key(String secret_key) {
-        this.secret_key = secret_key;
-    }
-
-    public String getAccount_name() {
-        return account_name;
-    }
-
-    public void setAccount_name(String account_name) {
-        this.account_name = account_name;
+    public void setAccountProperties(AccountProperties accountProperties) {
+        this.accountProperties = accountProperties;
     }
 
     /**

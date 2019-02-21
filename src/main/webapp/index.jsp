@@ -25,9 +25,6 @@
     <link rel="stylesheet" href="<c:url value="/resources/vendor/font-awesome/css/font-awesome.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/themify-icons/css/themify-icons.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/pace/themes/orange/pace-theme-minimal.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/jqvmap/jqvmap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/slick/slick.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/slick/slick-theme.css"/>">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/main.css"/>">

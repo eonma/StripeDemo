@@ -3,6 +3,7 @@ package stripe.api.playground.service;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import org.apache.log4j.Logger;
 import stripe.api.playground.model.PaymentIntentReq;
 import stripe.api.playground.util.Constants;
 import stripe.api.playground.util.StripeDemoUtil;
@@ -16,7 +17,18 @@ import java.util.*;
 
 public class PaymentServ {
 
-    private static final String CLASSNAME = PaymentServ.class.getName();
+    private static final Logger logger = Logger.getLogger(PaymentServ.class);
+
+    private String apiKey;
+
+    public PaymentServ() {
+    }
+
+    public PaymentServ(String apiKey) {
+        this.apiKey = apiKey;
+        Stripe.apiKey = apiKey;
+        Stripe.apiVersion = "2019-02-19";
+    }
 
     /**
      * Create a PaymentIntent
@@ -26,10 +38,7 @@ public class PaymentServ {
      */
     public PaymentIntent createPaymentIntent(PaymentIntentReq piReq) throws StripeException {
 
-        //TODO: dynamic secret key.
-        Stripe.apiKey = Constants.GB_PAYMENT_SK;
         Map<String, Object> requestParams = createPIRequestParams(piReq);
-        System.out.println("request parameters: " + requestParams);
         PaymentIntent pi = PaymentIntent.create(requestParams);
 
         return pi;
@@ -42,12 +51,12 @@ public class PaymentServ {
 
         for (Map.Entry<String, Object> entry : pageParams.entrySet()) {
 
-            // convert allowed_source_types to List
-            if ("allowed_source_types".equals(entry.getKey())){
+            // convert payment_method_types to List
+            if ("payment_method_types".equals(entry.getKey())){
                 String value = (String) entry.getValue();
                 List<String> valueList = new ArrayList<>();
                 valueList.add(value);
-                params.put("allowed_source_types", valueList);
+                params.put("payment_method_types", valueList);
             }
             // convert metadata List to Map
             else if ("metadata".equals(entry.getKey())){
@@ -67,7 +76,6 @@ public class PaymentServ {
                 }
                 if (metadataMap != null) {
                     params.put("metadata", metadataMap);
-                    System.out.println("Key : metadata is added, value : " + metadataMap.entrySet());
                 }
             }
             // process shipping Map and address map
@@ -88,16 +96,14 @@ public class PaymentServ {
                 Map<String, Object> tdMap = (Map<String, Object>) entry.getValue();
                 if (tdMap.get("destination") != null && !"".equals(tdMap.get("destination"))){
                     params.put("transfer_data", tdMap);
-                    System.out.println("Key : " + entry.getKey() + " is added, value : " + tdMap);
                 }
             }
             // all other parameters
             else {
                 params.put(entry.getKey(), entry.getValue());
-                System.out.println("Key : " + entry.getKey() + " is added, value : " + entry.getValue());
             }
         }
-        System.out.println("Param map: " + params);
+        logger.info("Create PaymentIntent param map: " + params);
         return params;
     }
 
@@ -108,7 +114,6 @@ public class PaymentServ {
      * @throws StripeException
      */
     public PaymentIntent retrievePaymentIntent(String id) throws StripeException {
-        Stripe.apiKey = Constants.GB_PAYMENT_SK;
         PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
         return paymentIntent;
     }

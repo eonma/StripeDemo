@@ -1,8 +1,5 @@
 package stripe.api.playground.controller;
 
-import com.stripe.model.Event;
-import com.stripe.model.EventCollection;
-import com.stripe.net.ApiResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

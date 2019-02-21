@@ -1,8 +1,12 @@
 package stripe.api.playground.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import stripe.api.playground.config.properties.AccountProperties;
+import stripe.api.playground.config.properties.AccountPropertyCollections;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +15,18 @@ import java.util.Map;
  */
 
 public class StripeDemoUtil {
+    private static AccountPropertyCollections accountPropertyCollections;
 
+    private static void init(){
+        if (accountPropertyCollections == null){
+            accountPropertyCollections = Properties.getAccountPropertyCollections();
+        }
+    }
+
+    public static AccountPropertyCollections getAccountPropertyCollections(){
+        init();
+        return accountPropertyCollections;
+    }
     /**
      * convert an object to a map
      * @param obj
@@ -61,5 +76,57 @@ public class StripeDemoUtil {
         }
 
         return isNotEmpty;
+    }
+
+
+    /**
+     * Get account propeties from provided account name
+     * @param accountName
+     * @return
+     */
+    public static AccountProperties getAccountPropertiesFromName(String accountName){
+
+        init();
+
+        AccountProperties accountProperties = null;
+        List<AccountProperties> accountPropertiesList = accountPropertyCollections.getAccountPropertiesList();
+        Iterator<AccountProperties> it = accountPropertiesList.iterator();
+        while (it.hasNext()){
+            AccountProperties ap = it.next();
+            if (ap.getAccountName().equalsIgnoreCase(accountName)){
+                accountProperties = ap;
+                break;
+            }
+        }
+        return accountProperties;
+    }
+
+    /**
+     * Get Stripe account API secret key using provided account name
+     * @param accountName
+     * @return
+     */
+    public static String getAccountSecretKeyFromName(String accountName){
+
+        String secretKey = null;
+        AccountProperties accountProperties = getAccountPropertiesFromName(accountName);
+        if (accountProperties != null){
+            secretKey = accountProperties.getAccountSecretKey();
+        }
+        return secretKey;
+    }
+
+    /**
+     * Get String account API publish key using provided account name
+     * @param accountName
+     * @return
+     */
+    public static String getAccountPublishKeyFromName(String accountName){
+        String publishKey = null;
+        AccountProperties accountProperties = getAccountPropertiesFromName(accountName);
+        if (accountProperties != null){
+            publishKey = accountProperties.getAccountPublishKey();
+        }
+        return publishKey;
     }
 }

@@ -71,8 +71,16 @@
                     <div class="panel panel-main">
 
                         <div class="panel-heading">
+                        <form:form class="form-horizontal" id="acct-form" method="post" action="plan" modelAttribute="stripeAccount">
                             <h3 class="panel-title">All Plans - ${fn:length(plans)}</h3>
                             <span class="client-server stripe-blue" >SERVER SIDE</span>
+                            <form:select path="accountProperties" id="stripe-account" class="panel-title right">
+                                <form:option value="" label="Select account"/>
+                                <c:forEach items="${accounts}" var="account">
+                                    <form:option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                </c:forEach>
+                            </form:select>
+                        </form:form>
                         </div>
                         <div class="panel-body">
                             <div class="container-fluid">
@@ -201,153 +209,156 @@
             <div class="sidebar-widget">
                 <h4 class="widget-heading"><i class="fa fa-shopping-basket"></i> CREATE A NEW PLAN</h4>
             </div>
-            <form:form class="form-horizontal" id="plnForm" method="post" action="plan" modelAttribute="planReq">
-                <div class="sidebar-widget">
-                    <div class="row">
-                        <div class="col-xs-12">
+            <div class="sidebar-widget">
 
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;"><a href="#" class="list-product" style="color: #f1f1f1; text-decoration: underline;">product</a></label>
-                                <div class="col-xs-7">
-                                    <form:input path="product" cssStyle="height: 25px;" class="form-control" id="product" value="${planReq.product}" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;">nickname</label>
-                                <div class="col-xs-7">
-                                    <form:input path="nickname" cssStyle="height: 25px;" class="form-control" id="nickname" value="${planReq.nickname}" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;">currency</label>
-                                <div class="col-xs-7">
-                                    <form:input path="currency" cssStyle="height: 25px;" class="form-control" id="currency" value="${planReq.currency}" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;">amount</label>
-                                <div class="col-xs-7">
-                                    <form:input path="amount" cssStyle="height: 25px;" class="form-control" id="amount"  value="${planReq.amount}"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">interval</label>
-                                <div class="col-sm-7">
-                                    <form:select path="interval" id="interval" class="form-control" itemValue="${planReq.interval}" cssStyle="height: 26px;">
-                                        <form:option value="month" label="month"/>
-                                        <form:option value="day" label="day"/>
-                                        <form:option value="week" label="week"/>
-                                        <form:option value="year" label="year"/>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;">interval_count</label>
-                                <div class="col-xs-7">
-                                    <form:input path="interval_count" cssStyle="height: 25px;" class="form-control" id="intervalCount" value="${planReq.interval_count}" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">usage_type</label>
-                                <div class="col-sm-7">
-                                    <form:select path="usage_type" id="usageType" class="form-control" itemValue="${planReq.usage_type}" cssStyle="height: 26px;">
-                                        <form:option value="licensed" label="licensed"/>
-                                        <form:option value="metered" label="metered"/>
-                                    </form:select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-xs-5 control-label" style="padding-top: 5px;">transform_usage</label>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-xs-7 control-label" style="padding-top: 5px;">dived_by</label>
-                                <div class="col-xs-5">
-                                    <form:input path="transform_usage.divide_by" cssStyle="height: 25px;" class="form-control" id="divideBy" value="${planReq.transform_usage.divide_by}" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-xs-7 control-label" style="padding-top: 5px;">round</label>
-                                <div class="col-xs-5">
-                                    <form:select path="transform_usage.round" id="round" class="form-control" itemValue="${planReq.transform_usage.round}" cssStyle="height: 26px;">
-                                        <form:option value="" label="----"/>
-                                        <form:option value="up" label="up"/>
-                                        <form:option value="down" label="down"/>
-                                    </form:select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">billing_scheme</label>
-                                <div class="col-sm-7">
-                                    <form:select path="billing_scheme" id="billingScheme" class="form-control" itemValue="${planReq.billing_scheme}" cssStyle="height: 26px;">
-                                        <form:option value="per_unit" label="per_unit"/>
-                                        <form:option value="tiered" label="tiered"/>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="widget-header tiered-pricing">
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">tiers_mode</label>
-                                    <div class="col-sm-7">
-                                        <form:select path="tiers_mode" id="tiersMode" class="form-control" itemValue="${planReq.tiers_mode}" cssStyle="height: 26px;">
-                                            <form:option value="volume" label="volume"/>
-                                            <form:option value="graduated" label="graduated"/>
-                                        </form:select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-5 control-label" style="padding-top: 5px;">tiers</label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[0]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[0].up_to" cssStyle="height: 25px;" class="form-control" id="upto0"  />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[0]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[0].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt1"  />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[1]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[1].up_to" cssStyle="height: 25px;" class="form-control" id="upto1"  />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[1]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[1].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt1"  />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[2]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[2].up_to" cssStyle="height: 25px;" class="form-control" id="upto2"  />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[2]</label>
-                                    <div class="col-xs-5">
-                                        <form:input path="tiers[2].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt2"  />
-                                    </div>
-                                </div>
+                <form:form class="form-horizontal" id="plnForm" method="post" action="plan" modelAttribute="planReq">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;"><a href="#" class="list-product" style="color: #f1f1f1; text-decoration: underline;">product</a></label>
+                            <div class="col-xs-7">
+                                <form:input path="product" cssStyle="height: 25px;" class="form-control" id="product" value="${planReq.product}" />
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="submit" class="btn btn-primary-stripe-slate btn-toggle-create"><i class="fa fa-plus"></i>New plan</button>
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;">nickname</label>
+                            <div class="col-xs-7">
+                                <form:input path="nickname" cssStyle="height: 25px;" class="form-control" id="nickname" value="${planReq.nickname}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;">currency</label>
+                            <div class="col-xs-7">
+                                <form:input path="currency" cssStyle="height: 25px;" class="form-control" id="currency" value="${planReq.currency}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;">amount</label>
+                            <div class="col-xs-7">
+                                <form:input path="amount" cssStyle="height: 25px;" class="form-control" id="amount"  value="${planReq.amount}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">interval</label>
+                            <div class="col-sm-7">
+                                <form:select path="interval" id="interval" class="form-control" itemValue="${planReq.interval}" cssStyle="height: 26px;">
+                                    <form:option value="month" label="month"/>
+                                    <form:option value="day" label="day"/>
+                                    <form:option value="week" label="week"/>
+                                    <form:option value="year" label="year"/>
+                                </form:select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;">interval_count</label>
+                            <div class="col-xs-7">
+                                <form:input path="interval_count" cssStyle="height: 25px;" class="form-control" id="intervalCount" value="${planReq.interval_count}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">usage_type</label>
+                            <div class="col-sm-7">
+                                <form:select path="usage_type" id="usageType" class="form-control" itemValue="${planReq.usage_type}" cssStyle="height: 26px;">
+                                    <form:option value="licensed" label="licensed"/>
+                                    <form:option value="metered" label="metered"/>
+                                </form:select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-5 control-label" style="padding-top: 5px;">transform_usage</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-xs-7 control-label" style="padding-top: 5px;">dived_by</label>
+                            <div class="col-xs-5">
+                                <form:input path="transform_usage.divide_by" cssStyle="height: 25px;" class="form-control" id="divideBy" value="${planReq.transform_usage.divide_by}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-7 control-label" style="padding-top: 5px;">round</label>
+                            <div class="col-xs-5">
+                                <form:select path="transform_usage.round" id="round" class="form-control" itemValue="${planReq.transform_usage.round}" cssStyle="height: 26px;">
+                                    <form:option value="" label="----"/>
+                                    <form:option value="up" label="up"/>
+                                    <form:option value="down" label="down"/>
+                                </form:select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">billing_scheme</label>
+                            <div class="col-sm-7">
+                                <form:select path="billing_scheme" id="billingScheme" class="form-control" itemValue="${planReq.billing_scheme}" cssStyle="height: 26px;">
+                                    <form:option value="per_unit" label="per_unit"/>
+                                    <form:option value="tiered" label="tiered"/>
+                                </form:select>
+                            </div>
+                        </div>
+                        <div class="widget-header tiered-pricing">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">tiers_mode</label>
+                                <div class="col-sm-7">
+                                    <form:select path="tiers_mode" id="tiersMode" class="form-control" itemValue="${planReq.tiers_mode}" cssStyle="height: 26px;">
+                                        <form:option value="volume" label="volume"/>
+                                        <form:option value="graduated" label="graduated"/>
+                                    </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-5 control-label" style="padding-top: 5px;">tiers</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[0]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[0].up_to" cssStyle="height: 25px;" class="form-control" id="upto0"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[0]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[0].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt1"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[1]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[1].up_to" cssStyle="height: 25px;" class="form-control" id="upto1"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[1]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[1].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt1"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">up_to[2]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[2].up_to" cssStyle="height: 25px;" class="form-control" id="upto2"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-7 control-label" style="padding-top: 5px;">unit_amount[2]</label>
+                                <div class="col-xs-5">
+                                    <form:input path="tiers[2].unit_amount" cssStyle="height: 25px;" class="form-control" id="uamt2"  />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form:form>
+                </form:form>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary-stripe-slate btn-toggle-create" id="create-plan-btn"><i class="fa fa-plus"></i>New plan</button>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
         <!-- END CREATE A PLAN -->
     </div>
@@ -403,19 +414,49 @@
 
         // Show error message
         if (${error != null}){
-            showErrorMsg("RequestID: ${error.requestId}", "Error message: ${error.message}");
+            showErrorMsg("${error.event}", "${error.message}");
         }
+
+        // show notification message
+        if (${notification != null}){
+            showNotification("${notification.title}", "${notification.message}");
+        }
+
+        $('#stripe-account').on('change', function () {
+            var accountName = $(this).children("option:selected").val();
+
+            $(this).parent().append('<input type="hidden" name="accountName" value="' + accountName + '" /> ');
+            $(this).parent().submit();
+        });
+
+        // preselect account
+        var accountName = "${account.accountName}";
+        $('#stripe-account option').each(function () {
+            var name = $(this).val();
+            if (name === accountName){
+                $(this).attr("selected", "selected");
+            }
+        });
+
+
+
+        $('#create-plan-btn').on('click', function () {
+            $('#plnForm').append('<input type="hidden" name="accountForNewProd" value="' + accountName + '" /> ');
+            $('#plnForm').append('<input type="hidden" name="createNewPlan" value="true" /> ');
+            $('#plnForm').submit();
+        });
+
 
         // retrieve plan details
         $('.plan-id').on('click', function()
         {
-            retrieveDetails("https://api.stripe.com/v1/plans/" + $(this).get(0).id);
+            retrieveDetails("https://api.stripe.com/v1/plans/" + $(this).get(0).id, "${account.accountSecretKey}");
         });
 
         // retrieve product details
         $('.product-id').on('click', function()
         {
-            retrieveDetails("https://api.stripe.com/v1/products/" + $(this).get(0).id);
+            retrieveDetails("https://api.stripe.com/v1/products/" + $(this).get(0).id, "${account.accountSecretKey}");
         });
 
         // retrieve all active products
@@ -432,7 +473,7 @@
                                 data: "active=true&limit=100",
                                 beforeSend: function (xhr) {
                                     /* Authorization header */
-                                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                                    xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                                     xhr.setRequestHeader("X-Mobile", "false");
                                 },
                                 success: function(result){
@@ -472,7 +513,7 @@
                         url: "https://api.stripe.com/v1/plans/" + planId,
                         beforeSend: function (xhr) {
 
-                            xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                            xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                             xhr.setRequestHeader("X-Mobile", "false");
                         },
                         success: function(result){
@@ -482,7 +523,7 @@
                                 type: 'success'
                             }).then(function(result){
                                 if (result.value){
-                                    location.replace($(location).attr("href").replace("#", ""));
+                                    window.location = getURL(window.location.href, "${account.accountName}");
                                 }
                             });
                         }
@@ -500,7 +541,7 @@
                 data: "active=true",
                 beforeSend: function (xhr) {
 
-                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                    xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function(result){
@@ -510,7 +551,7 @@
                         type: 'success'
                     }).then(function(result){
                         if (result.value){
-                            location.replace($(location).attr("href").replace("#", ""));
+                            window.location = getURL(window.location.href, "${account.accountName}");
                         }
                     });
                 }
@@ -526,7 +567,7 @@
                 data: "active=false",
                 beforeSend: function (xhr) {
 
-                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                    xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function(result){
@@ -536,7 +577,7 @@
                         type: 'success'
                     }).then(function(result){
                         if (result.value){
-                            location.replace($(location).attr("href").replace("#", ""));
+                            window.location = getURL(window.location.href, "${account.accountName}");
                         }
                     });
                 }

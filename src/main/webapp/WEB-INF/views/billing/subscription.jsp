@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/vendor/pace/themes/orange/pace-theme-minimal.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/toastr/toastr.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/sweetalert2/sweetalert2.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/vendor/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/main.css"/>">
@@ -70,10 +71,16 @@
                             <div class="panel-heading">
                                 <span class="client-server stripe-green">CLIENT SIDE</span>
                                 <h3 class="panel-title">Create a source - client side</h3>
+                                <select id="stripe-account" class="panel-title right">
+                                    <option value="" label="Select account"/>
+                                    <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
+                                        <option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                    </c:forEach>
+                                </select>
                             </div>
                             <div class="panel-body">
                                 <div class="col-md-6 col-md-offset-2 card-form">
-                                    <div class="form-horizontal">
+                                    <div class="form-horizontal" id="client-form">
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Name</label>
                                             <div class="col-sm-8">
@@ -88,8 +95,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Card details</label>
-                                            <div class="col-sm-8">
-                                                <div id="card-element"></div>
+                                            <div class="col-sm-8" id="stripe-card">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -207,7 +213,13 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-6 control-label">billing_cycle_anchor</label>
                                                     <div class="col-sm-6">
-                                                        <form:input path="billing_cycle_anchor" class="form-control" id="billingCycleAnchor" value="${subReq.billing_cycle_anchor}" />
+
+                                                        <%--<form:input path="billing_cycle_anchor" class="form-control" id="billingCycleAnchor" value="${subReq.billing_cycle_anchor}" />--%>
+
+                                                        <div class="input-group date" data-date-autoclose="true" data-provide="datepicker">
+                                                            <form:input path="billing_cycle_anchor" type="text" class="form-control" value="${subReq.billing_cycle_anchor }"/>
+                                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -228,6 +240,7 @@
                                                         <form:input path="trial_period_days" class="form-control" id="trialPeriodDays" value="${subReq.trial_period_days}" />
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="account-name" name="accountName" value=""/>
                                             </div>
                                         </div>
                                     </div>
@@ -264,6 +277,7 @@
 <script src="<c:url value="/resources/vendor/toastr/toastr.min.js"/>"></script>
 <script src="<c:url value="/resources/scripts/klorofilpro-common.js"/>"></script>
 <script src="<c:url value="/resources/scripts/stripe-playground.js"/>"></script>
+<script src="<c:url value="/resources/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js" />"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.0.3/dist/sweetalert2.all.min.js"></script>
 <script>
@@ -286,11 +300,135 @@
         $('#source-display').hide();
         $('#customer-display').hide();
         $('.sub-result').hide();
+        $('#client-form').hide();
 
-        // render Stripe elements
-        var stripe = Stripe("${publishKey}", {
-            betas: ['payment_intent_beta_3']
+
+        // render Stripe elements when changing account
+        var account;
+        $('#stripe-account').on('change', function () {
+            var accountName = $(this).children("option:selected").val();
+            $('#account-name').val(accountName);
+
+            if (accountName != ""){
+                $('#client-form').show();
+                $.ajax({
+                    type : "GET",
+                    url : "getAccount",
+                    data: "acctName="+accountName,
+                    success: function(result){
+                        account = result;
+
+                        var stripe = Stripe(result.accountPublishKey, {
+                            betas: ['payment_intent_beta_3']
+                        });
+
+                        $('#card-element').remove();
+                        // create card-element
+                        $('#stripe-card').append("<div id=\"card-element\"></div>");
+                        renderStripeElements(stripe, result.accountSecretKey);
+                    }
+                });
+            } else {
+                $('#client-form').hide();
+                $('#card-element').remove();
+            }
         });
+
+
+        // retrieve source details
+        $('.source-id').on('click', function()
+        {
+            retrieveDetails("https://api.stripe.com/v1/sources/" + $(this).get(0).id, account.accountSecretKey);
+        });
+
+        // retrieve customer details
+        $('.customer-id').on('click', function()
+        {
+            retrieveDetails("https://api.stripe.com/v1/customers/" + $(this).get(0).id, account.accountSecretKey);
+        });
+
+        // retrieve subscription details
+        $('.sub-id').on('click', function()
+        {
+            retrieveDetails("https://api.stripe.com/v1/subscriptions/" + $(this).get(0).id, account.accountSecretKey);
+        });
+
+        // retrieve all active plans
+        $('.list-plan').on('click', function()
+        {
+            var id = $(this).get(0).id;
+            console.log(id);
+            Swal.fire({
+                html: '<h4>All active plans</h4><pre class="plan-class" style="text-align: left !important;"></pre>',
+                onBeforeOpen: (
+                    Swal.showLoading(),
+                        function(){
+                            $.ajax({
+                                type : "GET",
+                                url : "https://api.stripe.com/v1/plans",
+                                data: "active=true&limit=100",
+                                beforeSend: function (xhr) {
+                                    /* Authorization header */
+                                    xhr.setRequestHeader("Authorization", "Bearer " + account.accountSecretKey);
+                                    xhr.setRequestHeader("X-Mobile", "false");
+                                },
+                                success: function(result){
+                                    var plan = result.data;
+                                    $.each( plan, function( key, value ) {
+                                       $('.plan-class').append("plan : <a href=\"#\" class=\"plan-id\" id=\"" + value.id + "\">" + value.id + "</a> / " + value.nickname + " / " + value.billing_scheme +"<br>")
+                                    });
+                                    // set plan.id
+                                    $('.plan-id').on('click', function () {
+                                        $('#item' + id + "plan").val($(this).get(0).id);
+                                        Swal.close();
+                                    })
+                                }
+                            })
+                        }
+                )
+            });
+
+        });
+
+        // date picker
+        $('.input-group.date').datepicker({
+            daysOfWeekDisabled: "0,6",
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        // create subscription request
+        $('.create-sub-req').on('click', function(){
+            $('.toast-error').hide();
+            $('.create-sub-req').append(" <i class=\"fa fa-spinner fa-spin card-btn-spinner\"></i>");
+            $('.create-sub-req').prop('disabled', true);
+
+            $.ajax({
+                type : "POST",
+                url : "subscription",
+                dataType : "json",
+                data: $('#subForm').serialize(),
+                success: function(result){
+
+                    if (result.error){
+                        console.log("Error");
+                        showErrorMsg(result.body.event, result.body.message);
+                    } else {
+                        $('.sub-id').append(result.body.id);
+                        $('.sub-id').attr("id", result.body.id);
+                        $('.sub-result').show(500);
+                    }
+                    $('.create-sub-req').find('.card-btn-spinner').remove();
+                    $('.create-sub-req').prop('disabled', false);
+                }
+            });
+
+        });
+
+    });
+
+    // Render Stripe Elements
+    function renderStripeElements(stripe, secretKey){
 
         var elements = stripe.elements();
         var cardElement = elements.create('card', {hidePostalCode:true, style:style});
@@ -327,96 +465,12 @@
                     email: $('#cardholder-email').val()
                 },
             }).then(function(result) {
-                handleResult(result);
+                handleResult(result, secretKey);
             });
         });
+    };
 
-        // retrieve source details
-        $('.source-id').on('click', function()
-        {
-            retrieveDetails("https://api.stripe.com/v1/sources/" + $(this).get(0).id);
-        });
-
-        // retrieve customer details
-        $('.customer-id').on('click', function()
-        {
-            retrieveDetails("https://api.stripe.com/v1/customers/" + $(this).get(0).id);
-        });
-
-        // retrieve subscription details
-        $('.sub-id').on('click', function()
-        {
-            retrieveDetails("https://api.stripe.com/v1/subscriptions/" + $(this).get(0).id);
-        });
-
-        // retrieve all active plans
-        $('.list-plan').on('click', function()
-        {
-            var id = $(this).get(0).id;
-            console.log(id);
-            Swal.fire({
-                html: '<h4>All active plans</h4><pre class="plan-class" style="text-align: left !important;"></pre>',
-                onBeforeOpen: (
-                    Swal.showLoading(),
-                        function(){
-                            $.ajax({
-                                type : "GET",
-                                url : "https://api.stripe.com/v1/plans",
-                                data: "active=true&limit=100",
-                                beforeSend: function (xhr) {
-                                    /* Authorization header */
-                                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
-                                    xhr.setRequestHeader("X-Mobile", "false");
-                                },
-                                success: function(result){
-                                    var plan = result.data;
-                                    $.each( plan, function( key, value ) {
-                                       $('.plan-class').append("plan : <a href=\"#\" class=\"plan-id\" id=\"" + value.id + "\">" + value.id + "</a> / " + value.nickname + " / " + value.billing_scheme +"<br>")
-                                    });
-                                    // set plan.id
-                                    $('.plan-id').on('click', function () {
-                                        $('#item' + id + "plan").val($(this).get(0).id);
-                                        Swal.close();
-                                    })
-                                }
-                            })
-                        }
-                )
-            });
-
-        });
-
-        // create subscription request
-        $('.create-sub-req').on('click', function(){
-            $('.toast-error').hide();
-            $('.create-sub-req').append(" <i class=\"fa fa-spinner fa-spin card-btn-spinner\"></i>");
-            $('.create-sub-req').prop('disabled', true);
-
-            $.ajax({
-                type : "POST",
-                url : "subscription",
-                dataType : "json",
-                data: $('#subForm').serialize(),
-                success: function(result){
-                    //console.log(result.body);
-                    if (result.error){
-                        console.log("Error");
-                        showErrorMsg(result.body.code, "Request ID: " + result.body.requestId + " Message: " + result.body.message);
-                    } else {
-                        $('.sub-id').append(result.body.id);
-                        $('.sub-id').attr("id", result.body.id);
-                        $('.sub-result').show(500);
-                    }
-                    $('.create-sub-req').find('.card-btn-spinner').remove();
-                    $('.create-sub-req').prop('disabled', false);
-                }
-            });
-
-        });
-
-    });
-
-    function handleResult(result){
+    function handleResult(result, accountSecretKey){
         // keep card form on the left
         var hasResponse = $('.pi-response:visible').length;
         if (hasResponse===0){
@@ -452,7 +506,7 @@
                 data: "source=" + result.source.id + "&email=" + result.source.owner.email + "&description=" + result.source.owner.name,
                 beforeSend: function (xhr) {
                     /* Authorization header */
-                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                    xhr.setRequestHeader("Authorization", "Bearer " + accountSecretKey);
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function(result){
@@ -464,6 +518,12 @@
                     // Show create subscription panel
                     $('.sub-panel').show(500);
                     $('#customer').val(result.id);
+
+
+                    // disable account selection
+                    $('#stripe-account option').each(function () {
+                        $(this).attr("disabled", "disabled");
+                    })
                 }
             })
 
@@ -471,28 +531,6 @@
     };
 
 
-
-    function showErrorMsg(title, msg){
-
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": false,
-            "progressBar": false,
-            "positionClass": "toast-top-full-width",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "0",
-            "extendedTimeOut": "0",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
-        toastr.error(msg, title);
-    };
 </script>
 
 </body>

@@ -69,8 +69,16 @@
                     <!-- FEATURED DATATABLE -->
                     <div class="panel panel-main">
                         <div class="panel-heading">
-                            <h3 class="panel-title">All Products - ${fn:length(products)}</h3>
-                            <span class="client-server stripe-blue" >SERVER SIDE</span>
+                            <form:form class="form-horizontal" id="acct-form" method="post" action="product" modelAttribute="stripeAccount">
+                                <h3 class="panel-title">All Products - ${fn:length(products)}</h3>
+                                <span class="client-server stripe-blue" >SERVER SIDE</span>
+                                <form:select path="accountProperties" id="stripe-account" class="panel-title right">
+                                    <form:option value="" label="Select account"/>
+                                    <c:forEach items="${accounts}" var="account">
+                                        <form:option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                    </c:forEach>
+                                </form:select>
+                            </form:form>
                         </div>
                         <div class="panel-body">
                             <div class="container-fluid" >
@@ -118,7 +126,7 @@
                                                             <span class="title">CREATED</span>
                                                             <jsp:useBean id="dateValue" class="java.util.Date"/>
                                                             <jsp:setProperty name="dateValue" property="time" value="${product.created}"/>
-                                                            <span class="value"><fmt:formatDate value="${dateValue}" pattern="dd-MMM-yy HH:mm:SS"/></span>
+                                                            <span class="value"><fmt:formatDate value="${dateValue}" pattern="yy-MMM-dd HH:mm:SS"/></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -159,7 +167,7 @@
                                                 <td>${product.type}</td>
 
                                                 <jsp:setProperty name="dateValue" property="time" value="${product.created}"/>
-                                                <td><fmt:formatDate value="${dateValue}" pattern="dd/MMM/yyyy HH:mm:ss"/></td>
+                                                <td><fmt:formatDate value="${dateValue}" pattern="yy-MM-dd HH:mm:ss"/></td>
                                                 <td>
                                                     <div class="dropdown" style="float: right;">
                                                         <a href="#" class="toggle-dropdown" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -203,37 +211,40 @@
             <div class="sidebar-widget">
                 <h4 class="widget-heading"><i class="fa fa-shopping-basket"></i> CREATE A NEW PRODUCT</h4>
             </div>
-            <form:form class="form-horizontal" id="prdForm" method="post" action="product" modelAttribute="prd">
-                <div class="sidebar-widget">
-                    <div class="row">
-                        <div class="col-xs-12">
+            <div class="sidebar-widget">
+                <form:form class="form-horizontal" id="prdForm" method="post" action="product" modelAttribute="prd">
+                <div class="row">
+                    <div class="col-xs-12">
 
-                            <div class="form-group">
-                                <label class="col-xs-6 control-label" style="padding-top: 5px;">name</label>
-                                <div class="col-xs-6">
-                                    <form:input path="name" cssStyle="height: 25px;" class="form-control" id="name" value="${product.name}" />
-                                </div>
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label" style="padding-top: 5px;">name</label>
+                            <div class="col-xs-6">
+                                <form:input path="name" cssStyle="height: 25px;" class="form-control" id="name" value="${product.name}" />
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-6 control-label">currency</label>
-                                <div class="col-sm-6">
-                                    <form:select path="type" id="type" class="form-control" itemValue="${product.type}" cssStyle="height: 26px;">
-                                        <form:option value="service" label="service"/>
-                                        <form:option value="good" label="good"/>
-                                    </form:select>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">currency</label>
+                            <div class="col-sm-6">
+                                <form:select path="type" id="type" class="form-control" itemValue="${product.type}" cssStyle="height: 26px;">
+                                    <form:option value="service" label="service"/>
+                                    <form:option value="good" label="good"/>
+                                </form:select>
                             </div>
+                        </div>
 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="submit" class="btn btn-primary-stripe-slate btn-toggle-create"><i class="fa fa-plus"></i>New product</button>
-                        </div>
                     </div>
                 </div>
-            </form:form>
+                </form:form>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary-stripe-slate btn-toggle-create" id="create-product-btn"><i class="fa fa-plus"></i>New product</button>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
         <!-- END RIGHT SIDEBAR -->
     </div>
@@ -261,6 +272,33 @@
         $('#navBilling').toggleClass('active');
         $('#navProduct').toggleClass('active');
 
+
+        // Show error message
+        if (${error != null}){
+            showErrorMsg("${error.event}", "${error.message}");
+        }
+
+        // show notification message
+        if (${notification != null}){
+            showNotification("${notification.title}", "${notification.message}");
+        }
+
+        // preselect account
+        var accountName = "${account.accountName}";
+        $('#stripe-account option').each(function () {
+            var name = $(this).val();
+            if (name === accountName){
+                $(this).attr("selected", "selected");
+            }
+        });
+
+        $('#create-product-btn').on('click', function () {
+           $('#prdForm').append('<input type="hidden" name="accountForNewProd" value="' + accountName + '" /> ');
+            $('#prdForm').append('<input type="hidden" name="createNewProduct" value="true" /> ');
+            $('#prdForm').submit();
+        });
+
+
         // remove [] from allow_source_type
         //var allowedSourceType = $('#allowedSourceTypes').val();
         //$('#allowedSourceTypes').val(allowedSourceType.substr(1, allowedSourceType.length-2));
@@ -269,6 +307,13 @@
         $('.project-accordion [data-toggle="collapse"]').on('click', function()
         {
             $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
+        });
+
+        $('#stripe-account').on('change', function () {
+            var accountName = $(this).children("option:selected").val();
+
+            $(this).parent().append('<input type="hidden" name="accountName" value="' + accountName + '" /> ');
+            $(this).parent().submit();
         });
 
         // datatable column with reorder extension
@@ -325,13 +370,12 @@
         // retrieve product details
         $('.product-id').on('click', function()
         {
-            retrieveDetails("https://api.stripe.com/v1/products/" + $(this).get(0).id);
+            retrieveDetails("https://api.stripe.com/v1/products/" + $(this).get(0).id, "${account.accountSecretKey}");
         });
 
         // delete a product
         $('.delete-product').on('click', function () {
             var prodId = $(this).get(0).id;
-            alert("HERE");
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -346,7 +390,7 @@
                         url: "https://api.stripe.com/v1/products/" + prodId,
                         beforeSend: function (xhr) {
 
-                            xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                            xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                             xhr.setRequestHeader("X-Mobile", "false");
                         },
                         success: function(result){
@@ -356,7 +400,7 @@
                                 type: 'success'
                             }).then(function(result){
                                 if (result.value){
-                                    location.replace($(location).attr("href").replace("#", ""));
+                                    window.location = getURL(window.location.href, "${account.accountName}");
                                 }
                             });
                         },
@@ -368,7 +412,7 @@
             });
         });
 
-        // reactive a plan
+        // reactive a product
         $('.active-product').on('click', function () {
             var prodId = $(this).get(0).id;
 
@@ -378,7 +422,7 @@
                 data: "active=true",
                 beforeSend: function (xhr) {
 
-                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                    xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function(result){
@@ -388,14 +432,14 @@
                         type: 'success'
                     }).then(function(result){
                         if (result.value){
-                            location.replace($(location).attr("href").replace("#", ""));
+                            window.location = getURL(window.location.href, "${account.accountName}");
                         }
                     });
                 }
             });
         });
 
-        // deactive a plan
+        // deactive a product
         $('.deactive-product').on('click', function () {
             var prodId = $(this).get(0).id;
 
@@ -405,7 +449,7 @@
                 data: "active=false",
                 beforeSend: function (xhr) {
 
-                    xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                    xhr.setRequestHeader("Authorization", "Bearer ${account.accountSecretKey}");
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function(result){
@@ -415,7 +459,7 @@
                         type: 'success'
                     }).then(function(result){
                         if (result.value){
-                            location.replace($(location).attr("href").replace("#", ""));
+                            window.location = getURL(window.location.href, "${account.accountName}");
                         }
                     });
                 }

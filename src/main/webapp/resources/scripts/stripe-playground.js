@@ -72,6 +72,36 @@ function retrieveDetails(url){
     });
 };
 
+function retrieveDetails(url, secretKey){
+
+    Swal.fire({
+        html: '<pre style="text-align: left !important;"></pre>',
+        onBeforeOpen: (
+            Swal.showLoading(),
+                function(){
+                    $.ajax({
+                        type : "GET",
+                        url : url,
+                        beforeSend: function (xhr) {
+                            /* Authorization header */
+                            xhr.setRequestHeader("Authorization", "Bearer " + secretKey);
+                            xhr.setRequestHeader("X-Mobile", "false");
+                        },
+                        success: function(result){
+                            //console.log(JSON.stringify(result));
+                            Swal.getContent().querySelector('pre').textContent = JSON.stringify(result, null, 3);
+                        },
+                        error: function (result) {
+                            //console.log(result.responseJSON.error);
+                            Swal.close();
+                            showErrorMsg(result.responseJSON.error.code, result.responseJSON.error.message);
+                        }
+                    })
+                }
+        )
+    });
+};
+
 function updateStatus(url){
 
 }
@@ -96,4 +126,14 @@ function deleteObject(url){
             showErrorMsg(result.responseJSON.error.code, result.responseJSON.error.message);
         }
     });
+}
+
+
+
+function getURL(originalURL, accountName)
+{
+    var url = originalURL.replace("#", "");
+    url = url.split('?')[0];
+    url = url + "?acct=" + accountName;
+    return url;
 }

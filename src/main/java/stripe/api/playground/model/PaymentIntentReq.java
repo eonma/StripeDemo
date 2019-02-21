@@ -1,5 +1,7 @@
 package stripe.api.playground.model;
 
+import stripe.api.playground.util.JSONFormatter;
+
 import java.util.Map;
 
 /**
@@ -26,6 +28,8 @@ public class PaymentIntentReq {
     private String statement_descriptor;
     private Map<String, Object> transfer_data;
     private String transfer_group;
+    private String payment_method_types;
+    private Boolean save_payment_method;
 
     public String getAllowed_source_types() {
         return allowed_source_types;
@@ -161,5 +165,30 @@ public class PaymentIntentReq {
 
     public void setTransfer_group(String transfer_group) {
         this.transfer_group = transfer_group;
+    }
+
+    public String getPayment_method_types() {
+        return payment_method_types;
+    }
+
+    public void setPayment_method_types(String payment_method_types) {
+        this.payment_method_types = payment_method_types;
+    }
+
+    public Boolean getSave_payment_method() {
+        return save_payment_method;
+    }
+
+    public void setSave_payment_method(Boolean save_payment_method) {
+        this.save_payment_method = save_payment_method;
+    }
+
+    /**
+     * Returns a JSON string corresponding to object state
+     *
+     * @return JSON representation
+     */
+    public String toJSON() {
+        return JSONFormatter.toJSON(this);
     }
 }

@@ -23,19 +23,9 @@
                         <li class="dropdown dropdown-sub">
                             <a data-toggle="dropdown" id="navPi"> PaymentIntent <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="create-paymentintent" id="navCreatePi"> Create a PaymentIntent </a></li>
-                                <li><a href="create-paymentintent-connect" id="navCreatePiConnect">  Create a PaymentIntent for Connect</a></li>
-                                <li><a href="update-paymentintent" id="navUpdatePi"> Update a PaymentIntent </a></li>
+                                <li><a href="paymentintent" id="navCreatePi"> Create a PaymentIntent </a></li>
                                 <li><a href="confirm-paymentintent" id="navConfirmPi"> Confirm a PaymentIntent </a></li>
                                 <li><a href="capture-paymentintent" id="navCapturePi"> Capture a PaymentIntent </a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown dropdown-sub">
-                            <a data-toggle="dropdown" id="navCharge"> Charge <i class="icon-submenu ti-angle-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="create-charge" id="navCreateCharge"> Create a Charge </a></li>
-                                <li><a href="create-charge-connect" id="navCreateChargeConnect">  Create a Charge for Connect</a></li>
-                                <li><a href="capture-charge" id="navCaptureCharge"> Capture a Charge </a></li>
                             </ul>
                         </li>
                         <li>
@@ -153,8 +143,8 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden-xs hidden-sm">
-                    <a href="#" class="btn-toggle-rightsidebar">
-                        <i class="ti-settings"></i><span> Settings</span>
+                    <a href="add-account" class="btn-toggle-rightsidebar" id="addAccount">
+                        <i class="ti-settings"></i><span> Add account </span>
                     </a>
                 </li>
             </ul>

@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: chenma
-  Date: 2019-01-02
-  Time: 15:10
+  Date: 2019-02-11
+  Time: 14:38
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -40,15 +40,13 @@
 
 </head>
 <body class="layout-topnav">
-
-<!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
     <jsp:include page='../navbar.jsp'/>
     <!-- END NAVBAR -->
+
     <!-- MAIN -->
     <div class="main">
-        <!-- MAIN CONTENT -->
         <div class="main-content">
             <div class="container">
                 <!-- HEADING AND BREADCRUMB -->
@@ -67,31 +65,29 @@
                     <!-- REQUEST PANEL -->
                     <div class="panel panel-main panel-tab">
                         <div class="panel-heading">
-
                             <span class="client-server stripe-blue">SERVER SIDE</span>
                             <h3 class="panel-title">Create a PaymentIntent - server side</h3>
 
                             <select id="stripe-account" class="panel-title right" style="position: absolute;left: 70%;">
                                 <option value="" label="Select account"/>
-                                <c:forEach items="${accounts}" var="account">
+                                <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
                                     <option value="${account.accountName}" label="Account - ${account.accountName}"/>
                                 </c:forEach>
                             </select>
 
                             <ul class="nav nav-tabs pull-right">
-                                <li id="tabReq" class="active"><a href="#reqTab" data-toggle="tab"></i> REQUEST</a></li>
+                                <li id="tabReq" class="active"><a href="#reqTab" data-toggle="tab"></i> REQUEST </a></li>
                                 <li id="tabRes"><a href="#resTab" data-toggle="tab"></i> RESPONSE </a></li>
                             </ul>
-
-
                         </div>
                         <div class="panel-body">
                             <div class="tab-content no-padding">
                                 <!-- REQUEST TAB -->
                                 <div class="tab-pane fade in active" id="reqTab">
-                                    <form:form class="form-horizontal" id="piForm" method="post" action="create-paymentintent" modelAttribute="piReq">
-                                        <div class="project-info">
-                                            <div class="row">
+                                    <form:form class="form-horizontal" id="piForm" method="post" action="paymentintent" modelAttribute="piReq">
+                                        <!-- BASIC PARAMETERS -->
+                                        <div class="row">
+                                            <div class="project-info">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="col-sm-6 control-label"><b>amount</b></label>
@@ -123,14 +119,12 @@
                                                         <label class="col-sm-6 control-label">capture_method</label>
                                                         <div class="col-sm-6">
                                                             <form:select path="capture_method" id="captureMethod" class="form-control" itemValue="${piReq.capture_method}">
-                                                                <form:option value="" label="----"/>
                                                                 <form:option value="automatic"/>
                                                                 <form:option value="manual" />
                                                             </form:select>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="col-sm-4 control-label">customer</label>
@@ -147,100 +141,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- CONNECT PARAMS -->
-                                        <c:if test="${pageElement.connect}">
-                                            <div class="project-info connect">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="col-sm-4 control-label">application_fee_amount</label>
-                                                            <div class="col-sm-8">
-                                                                <form:input path="application_fee_amount" class="form-control" id="applicationFeeAmount" value="${piReq.application_fee_amount}"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="col-sm-4 control-label">on_behalf_of</label>
-                                                            <div class="col-sm-8">
-                                                                <form:input path="on_behalf_of" class="form-control" id="onBehalfOf" value="${piReq.on_behalf_of}" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="col-sm-4 control-label">transfer_group</label>
-                                                            <div class="col-sm-8">
-                                                                <form:input path="transfer_group" class="form-control" id="transferGroup" value="${piReq.transfer_group}" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="col-sm-4 control-label">transfer_data[destination]</label>
-                                                            <div class="col-sm-8">
-                                                                <form:input path="transfer_data['destination']" class="form-control" id="transfer_data_destination" value="${piReq.transfer_data.get('destination')}" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:if>
-                                        <!-- END CONNECT PARAMS -->
+                                        <!-- END BASIC PARAMETERS -->
 
-                                        <!-- OPTIONAL PARAMS -->
-                                        <div class="project-info">
-                                            <div class="panel-group project-accordion">
-                                                <div class="panel panel-second project-milestone">
-                                                    <div class="panel-heading">
-                                                        <h4 class="panel-title">
-                                                            <a href="#collapse1" data-toggle="collapse" data-parent="#accordion" class="collapsed">
-                                                                <span class="milestone-title"> Optional parameters </span>
-                                                                <i class="fa fa-plus-circle toggle-icon"></i>
-                                                            </a>
-                                                        </h4>
-                                                    </div>
-                                                    <div id="collapse1" class="panel-collapse collapse">
-                                                        <div class="panel-body">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
+                                        <div class="row">
+                                            <!-- OPTIONAL PARAMS -->
+                                            <div class="col-md-4">
+                                                <div class="project-info">
+                                                    <div class="panel-group project-accordion">
+                                                        <div class="panel panel-second project-milestone">
+                                                            <div class="panel-heading">
+                                                                <h4 class="panel-title">
+                                                                    <a href="#collapse1" data-toggle="collapse" data-parent="#accordion" class="collapsed">
+                                                                        <span class="milestone-title"> Optional parameters </span>
+                                                                        <i class="fa fa-plus-circle toggle-icon"></i>
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapse1" class="panel-collapse collapse">
+                                                                <div class="panel-body">
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">description</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="description" class="form-control" id="description" value="${piReq.description}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">receipt_email</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="receipt_email" class="form-control" id="receiptEmail" value="${piReq.receipt_email}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">statement_descriptor</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="statement_descriptor" class="form-control" id="statementDescriptor" value="${piReq.statement_descriptor}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">return_url</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="return_url" class="form-control" id="allowedSourceTypes" value="${piReq.return_url}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">metadata[0]</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="metadata[0]" class="form-control" id="metadata0" placeholder="key=value" value="${piReq.metadata[0]}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">metadata[1]</label>
-                                                                        <div class="col-sm-8">
-                                                                            <form:input path="metadata[1]" class="form-control" id="metadata1" placeholder="key=value" value="${piReq.metadata[1]}"/>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">save_payment_method</label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-6 control-label">save_payment_method</label>
+                                                                        <div class="col-sm-6">
                                                                             <form:select path="save_payment_method" id="savePaymentMethod" class="form-control" itemValue="${piReq.save_payment_method}">
                                                                                 <form:option value="" label="----" />
                                                                                 <form:option value="true" />
@@ -249,42 +170,99 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">shipping parameters</label>
-
+                                                                        <label class="col-sm-6 control-label">description</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="description" class="form-control" id="description" value="${piReq.description}"/>
+                                                                        </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label"><b>name</b></label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-6 control-label">receipt_email</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="receipt_email" class="form-control" id="receiptEmail" value="${piReq.receipt_email}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">statement_descriptor</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="statement_descriptor" class="form-control" id="statementDescriptor" value="${piReq.statement_descriptor}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">return_url</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="return_url" class="form-control" id="allowedSourceTypes" value="${piReq.return_url}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">metadata[0]</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="metadata[0]" class="form-control" id="metadata0" placeholder="key=value" value="${piReq.metadata[0]}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">metadata[1]</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="metadata[1]" class="form-control" id="metadata1" placeholder="key=value" value="${piReq.metadata[1]}"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- END CONNECT PARAMS -->
+                                            </div>
+                                            <!-- END OPTIONAL PARAMS -->
+
+                                            <!-- SHIPPING PARAMS -->
+                                            <div class="col-md-4">
+                                                <div class="project-info">
+                                                    <div class="panel-group project-accordion">
+                                                        <div class="panel panel-second project-milestone">
+                                                            <div class="panel-heading">
+                                                                <h4 class="panel-title">
+                                                                    <a href="#collapse2" data-toggle="collapse" data-parent="#accordion" class="collapsed">
+                                                                        <span class="milestone-title"> Shipping parameters </span>
+                                                                        <i class="fa fa-plus-circle toggle-icon"></i>
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapse2" class="panel-collapse collapse">
+                                                                <div class="panel-body">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-5 control-label"><b>name</b></label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.name" class="form-control" id="shippingName" value="${piReq.shipping.name}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label"><b>address.line1</b></label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-5 control-label"><b>address.line1</b></label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.address.line1" class="form-control" id="line1" value="${piReq.shipping.address.line1}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">address.line2</label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-5 control-label">address.line2</label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.address.line2" class="form-control" id="line2" value="${piReq.shipping.address.line2}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">address.city</label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-5 control-label">address.city</label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.address.city" class="form-control" id="city" value="${piReq.shipping.address.city}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">address.state</label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-5 control-label">address.state</label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.address.state" class="form-control" id="state" value="${piReq.shipping.address.state}"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">address.postal_code</label>
-                                                                        <div class="col-sm-8">
+                                                                        <label class="col-sm-5 control-label">address.postal_code</label>
+                                                                        <div class="col-sm-7">
                                                                             <form:input path="shipping.address.postal_code" class="form-control" id="postcode" value="${piReq.shipping.address.postal_code}"/>
                                                                         </div>
                                                                     </div>
@@ -294,24 +272,74 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- END CONNECT PARAMS -->
+                                            <!-- END SHIPPING PARAMS -->
 
+                                            <!-- CONNECT PARAMS -->
+                                            <div class="col-md-4">
+                                                <div class="project-info">
+                                                    <div class="panel-group project-accordion">
+                                                        <div class="panel panel-second project-milestone">
+                                                            <div class="panel-heading">
+                                                                <h4 class="panel-title">
+                                                                    <a href="#collapse3" data-toggle="collapse" data-parent="#accordion" class="collapsed">
+                                                                        <span class="milestone-title"> Connect parameters </span>
+                                                                        <i class="fa fa-plus-circle toggle-icon"></i>
+                                                                    </a>
+                                                                </h4>
+                                                            </div>
+                                                            <div id="collapse3" class="panel-collapse collapse">
+                                                                <div class="panel-body">
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">application_fee_amt</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="application_fee_amount" class="form-control" id="applicationFeeAmount" value="${piReq.application_fee_amount}"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">on_behalf_of</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="on_behalf_of" class="form-control" id="onBehalfOf" value="${piReq.on_behalf_of}" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">transfer_group</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="transfer_group" class="form-control" id="transferGroup" value="${piReq.transfer_group}" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-sm-6 control-label">transfer_data[dest]</label>
+                                                                        <div class="col-sm-6">
+                                                                            <form:input path="transfer_data['destination']" class="form-control" id="transfer_data_destination" value="${piReq.transfer_data.get('destination')}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- END CONNECT PARAMS -->
+                                        </div>
+
+                                        <!-- HIDDEN PARAMS -->
+                                        <input type="hidden" id="account-name" name="accountName" value=""/>
+                                        <!-- END HIDDEN PARAMS -->
+
+                                        <!-- SUBMIT -->
                                         <div class="row">
                                             <div class="col-md-4 col-md-offset-8">
                                                 <button type="submit" class="btn btn-primary-stripe-blue">Submit Request</button>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="account-name" name="accountName" value=""/>
+                                        <!-- END SUBMIT -->
                                     </form:form>
                                 </div>
-                                <!-- END RESPONSE TAB -->
+
                                 <!-- RESPONSE TAB -->
                                 <div class="tab-pane fade" id="resTab">
-                                    <h5>Create Payment Intent Response</h5>
-                                    <pre>
-                                        ${pi.toJson()}
-                                    </pre>
+                                    <h5>Create PaymentIntent Response</h5>
+                                    <pre>${viewObj.response.toJson()}</pre>
                                 </div>
                                 <!-- END RESPONSE TAB -->
                             </div>
@@ -321,12 +349,12 @@
                 </div>
 
                 <!-- PI CLIENT PANEL -->
-                <c:if test="${pageElement.response && !pageElement.error}">
+                <c:if test="${viewObj.hasResponse && !viewObj.hasError}">
                     <div class="row">
                         <div class="panel panel-main pi-client" id="piClient" style="border-top: 2px solid #1ea672">
                             <div class="panel-heading">
                                 <span class="client-server stripe-green">CLIENT SIDE</span>
-                                <h3 class="panel-title">PaymentIntent created - "<a href="#" id="${pi.id}" class="pi-id">${pi.id}</a>"</h3>
+                                <h3 class="panel-title">PaymentIntent created - "<a href="#" id="${viewObj.response.id}" class="pi-id">${viewObj.response.id}</a>"</h3>
                             </div>
                             <div class="panel-body">
                                 <div class="col-md-6 col-md-offset-2 card-form">
@@ -335,29 +363,29 @@
                                             <label class="col-sm-4 control-label">Name</label>
                                             <div class="col-sm-8">
                                                 <c:choose>
-                                                    <c:when test="${pi.status == 'requires_confirmation'}">
+                                                    <c:when test="${viewObj.response.status == 'requires_confirmation'}">
                                                         <input class="form-control" id="cardholder-name" type="text" value="John" disabled="disabled"/>
                                                     </c:when>
-                                                    <c:when test="${pi.status == 'requires_payment_method'}">
+                                                    <c:when test="${viewObj.response.status == 'requires_payment_method'}">
                                                         <input class="form-control" id="cardholder-name" type="text" />
                                                     </c:when>
                                                 </c:choose>
                                             </div>
                                         </div>
-                                        <c:if test="${pi.status == 'requires_confirmation'}">
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">source</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" id="pi_source" type="text" value="${pi.source}" disabled="disabled"/>
+                                        <c:if test="${viewObj.response.status == 'requires_confirmation'}">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">source</label>
+                                                <div class="col-sm-8">
+                                                    <input class="form-control" id="pi_source" type="text" value="${viewObj.response.source}" disabled="disabled"/>
+                                                </div>
                                             </div>
-                                        </div>
                                         </c:if>
 
                                         <c:choose>
-                                            <c:when test="${pi.status == 'requires_confirmation'}">
+                                            <c:when test="${viewObj.response.status == 'requires_confirmation'}">
 
                                             </c:when>
-                                            <c:when test="${pi.status == 'requires_payment_method'}">
+                                            <c:when test="${viewObj.response.status == 'requires_payment_method'}">
                                                 <div class="form-group">
                                                     <label class="col-sm-4 control-label">Card details</label>
                                                     <div class="col-sm-8">
@@ -380,7 +408,7 @@
                                         <!-- Create a PaymentIntent-->
                                         <div class="form-group">
                                             <div class="col-sm-8 col-sm-offset-4">
-                                                <button id="card-button" class="btn btn-primary-stripe-blue" data-secret="${pi.clientSecret}" style="width: 100%"><span>Complete Payment</span></button>
+                                                <button id="card-button" class="btn btn-primary-stripe-blue" data-secret="${viewObj.response.clientSecret}" style="width: 100%"><span>Complete Payment</span></button>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -392,7 +420,7 @@
                                         <!-- Retrieve a PaymentIntent-->
                                         <div class="form-group pi-retrieve" style="display: none;">
                                             <div class="col-sm-8 col-sm-offset-4">
-                                                <button class="btn btn-primary-stripe-blue pi-retrieve-btn" style="width: 100%"><span>Retrieve ${pi.id}</span></button>
+                                                <button class="btn btn-primary-stripe-blue pi-retrieve-btn" style="width: 100%"><span>Retrieve ${viewObj.response.id}</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -406,12 +434,11 @@
                 <!-- END PI CLIENT PANEL -->
 
                 <!-- PI DETAILS PANEL -->
-
                 <div class="row retrieve-pi-row" style="display: none;">
                     <div class="panel panel-main pi-details" id="piDetails" style="border-top: 2px solid #556cd6">
                         <div class="panel-heading">
                             <span class="client-server stripe-blue">SERVER SIDE</span>
-                            <h3 class="panel-title">Retrieve PaymentIntent - "${pi.id}" at server side</h3>
+                            <h3 class="panel-title">Retrieve PaymentIntent - "${viewObj.response.id}" at server side</h3>
                         </div>
                         <div class="panel-body">
                             <pre class="pi-details-response"></pre>
@@ -421,11 +448,10 @@
                 <!-- END PI DETAILS PANEL -->
             </div>
         </div>
-        <!-- END MAIN CONTENT -->
     </div>
     <!-- END MAIN -->
 </div>
-<!-- END WRAPPER -->
+
 <!-- Javascript -->
 <script src="<c:url value="/resources/vendor/jquery/jquery.min.js"/>"></script>
 <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
@@ -435,8 +461,9 @@
 <script src="<c:url value="/resources/scripts/stripe-playground.js"/>"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.0.3/dist/sweetalert2.all.min.js"></script>
-<script>
 
+
+<script>
     $(function()
     {
         // toggle nav active
@@ -444,14 +471,25 @@
         $('#navPi').toggleClass('active');
         $('#navCreatePi').toggleClass('active');
 
-        // Stripe account list
+        // accordion toggle collapse
+        $('.project-accordion [data-toggle="collapse"]').on('click', function()
+        {
+            $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
+        });
+
+        // load account list to form
         $('#stripe-account').on('change', function () {
             var accountName = $(this).children("option:selected").val();
             $('#account-name').val(accountName);
         });
 
+        // if current account is returned from server, set the parameter
+        if (${viewObj.currentAccount != null}){
+            $('#account-name').val("${viewObj.currentAccount.accountName}");
+        }
+
         // preselect account
-        var accountName = "${account.accountName}";
+        var accountName = "${viewObj.currentAccount.accountName}";
         $('#stripe-account option').each(function () {
             var name = $(this).val();
             if (name === accountName){
@@ -459,51 +497,40 @@
             }
         });
 
-        // accordion toggle collapse
-        $('.project-accordion [data-toggle="collapse"]').on('click', function()
-        {
-            $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
+        // manage page loading
+        if (${viewObj.hasError}){
+
+            // display error message returned from server
+            showErrorMsg("${viewObj.error.event}", "${viewObj.error.message}");
+        } else if (${viewObj.hasResponse}) {
+
+            // render elements
+            renderStripeElements("${viewObj.response.clientSecret}","${viewObj.currentAccount.accountPublishKey}");
+        }
+
+        // retrieve a PaymentIntent from server
+        $('.pi-retrieve-btn').on('click', function(){
+            $.ajax({
+                type : "POST",
+                url : "retrieve-paymentintent",
+                data : "pi=${viewObj.response.id}&acct=${viewObj.currentAccount.accountName}",
+                dataType : "json",
+                success: function(result){
+                    console.log(result.body);
+                    if (result.error){
+                        showErrorMsg(result.body.code, "Request ID: " + result.body.requestId + " Message: " + result.body.message);
+                    } else {
+                        $('.retrieve-pi-row').show();
+                        $('.pi-details-response').html(JSON.stringify(result.body, undefined, 2));
+                    }
+                }
+            });
+
         });
-
-        // show connect parameters
-        if (${pageElement.connect}){
-            $('.connect').show();
-        }
-
-        // show error
-        if (${error != null}){
-            showErrorMsg("${error.event}", "${error.message}");
-        } else if (${pageElement.response}) {
-            renderStripeElements("${pi.clientSecret}","${account.accountPublishKey}");
-        }
-
-        // retrieve a PaymentIntent
-       $('.pi-retrieve-btn').on('click', function(){
-           $.ajax({
-               type : "POST",
-               url : "retrieve-paymentintent",
-               data : "pi=${pi.id}&acct=" + $('#account-name').val(),
-               dataType : "json",
-               success: function(result){
-                   console.log(result.body);
-                   if (result.error){
-                       console.log("Error");
-                       showErrorMsg(result.body.code, "Request ID: " + result.body.requestId + " Message: " + result.body.message);
-                   } else {
-                       console.log("Success");
-                       $('.retrieve-pi-row').show();
-                       $('.pi-details-response').html(JSON.stringify(result.body, undefined, 2));
-                   }
-
-               }
-           });
-
-       });
     });
 
     // Stripe elements
     function renderStripeElements(clientSecret, publishKey){
-
         /* do some toggles*/
         $('.pi-response').hide();
 
@@ -532,8 +559,9 @@
         /**
          * standard card details
          */
-        var source = "${pi.source}";
-        console.log(source);
+        var source = "${viewObj.response.source}";
+
+        // mount card when source is not available
         if (source == ""){
             var cardElement = elements.create('card', {hidePostalCode:true, style:style});
             cardElement.mount('#card-element');
@@ -601,8 +629,7 @@
         // retrieve payment intent details
         $('.pi-id').on('click', function()
         {
-            console.log("${account.accountSecretKey}");
-            retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${account.accountSecretKey}");
+            retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
         });
     };
 
@@ -639,4 +666,5 @@
 
 </body>
 </html>
+
 

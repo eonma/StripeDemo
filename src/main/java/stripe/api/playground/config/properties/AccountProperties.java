@@ -1,5 +1,7 @@
 package stripe.api.playground.config.properties;
 
+import stripe.api.playground.util.JSONFormatter;
+
 /**
  * User: chenma
  * Date: 2019-02-07
@@ -44,5 +46,14 @@ public class AccountProperties {
 
     public void setAccountSecretKey(String accountSecretKey) {
         this.accountSecretKey = accountSecretKey;
+    }
+
+    /**
+     * Returns a JSON string corresponding to object state
+     *
+     * @return JSON representation
+     */
+    public String toJSON() {
+        return JSONFormatter.toJSON(this);
     }
 }

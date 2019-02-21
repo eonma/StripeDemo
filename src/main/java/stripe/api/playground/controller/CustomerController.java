@@ -33,7 +33,7 @@ public class CustomerController {
         CustomerCollection customerCollection = null;
         List<CustomerRes> customerResList = new ArrayList<>();
 
-        Stripe.apiKey = Constants.GB_PAYMENT_SK;
+        //Stripe.apiKey = Constants.GB_PAYMENT_SK;
         try {
             customerCollection = Customer.list(new HashMap<>());
         } catch (StripeException e) {

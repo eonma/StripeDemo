@@ -1,29 +1,25 @@
 package stripe.api.playground.controller;
 
 import com.stripe.exception.StripeException;
-import com.stripe.model.Plan;
-import com.stripe.model.Product;
-import com.stripe.model.Subscription;
-import com.stripe.model.SubscriptionCollection;
+import com.stripe.model.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import stripe.api.playground.model.PlanReq;
-import stripe.api.playground.model.PlaygroundResponse;
-import stripe.api.playground.model.RequestError;
-import stripe.api.playground.model.SubscriptionReq;
+import stripe.api.playground.config.properties.AccountProperties;
+import stripe.api.playground.config.properties.AccountPropertyCollections;
+import stripe.api.playground.model.*;
 import stripe.api.playground.service.BillingServ;
 import stripe.api.playground.util.Constants;
+import stripe.api.playground.util.Properties;
+import stripe.api.playground.util.StripeDemoUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import java.util.*;
 
 /**
  * User: chenma
@@ -34,7 +30,82 @@ import java.util.logging.Logger;
 @Controller
 public class BillingController {
 
-    private static final Logger logger = Logger.getLogger(BillingController.class.getName());
+    private static final Logger logger = Logger.getLogger(BillingController.class);
+
+
+    private AccountProperties getAccountPropertiesFromName(String accountName){
+        AccountProperties accountProperties = StripeDemoUtil.getAccountPropertiesFromName(accountName);
+
+        return accountProperties;
+    }
+    private String getAccountSecretKeyFromName(String accountName){
+
+        String secretKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+        return secretKey;
+    }
+
+    private void getProductsFromAccount(String accountName, Model model, Boolean isNew) {
+
+        model.addAttribute("isNew", false);
+        if (isNew != null && isNew){
+            model.addAttribute("isNew", true);
+        }
+
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            String apiKey = getAccountSecretKeyFromName(accountName);
+            if (StripeDemoUtil.isNotEmpty(apiKey)){
+                BillingServ billingServ = new BillingServ(apiKey);
+                List<Product> products = null;
+                try {
+                    products = billingServ.getProducts(getConditions(isNew));
+                } catch (StripeException e) {
+                    logger.error(e.getMessage());
+                    model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Get Product", e.getMessage(), "getProductsFromAccount", e.getCode()));
+                } catch (ParseException e) {
+                    logger.error(e.getMessage());
+                    model.addAttribute("error", new StripeDemoError("", "Get Product", e.getMessage(), "getProductsFromAccount", ""));
+                }
+                model.addAttribute("products", products);
+            }
+        } else {
+            model.addAttribute("products", new ArrayList<Product>());
+        }
+
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+        }
+    }
+
+    private void getPlansFromAccount(String accountName, Model model, Boolean isNew) {
+        model.addAttribute("isNew", false);
+        if (isNew != null && isNew){
+            model.addAttribute("isNew", true);
+        }
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            String apiKey = getAccountSecretKeyFromName(accountName);
+            if (StripeDemoUtil.isNotEmpty(apiKey)){
+                BillingServ billingServ = new BillingServ(apiKey);
+                List<Plan> plans = null;
+                try {
+                    plans = billingServ.getPlans(getConditions(isNew));
+                } catch (StripeException e) {
+                    logger.error(e.getMessage());
+                    model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Get Plan", e.getMessage(), "getPlansFromAccount", e.getCode()));
+                } catch (ParseException e) {
+                    logger.error(e.getMessage());
+                    model.addAttribute("error", new StripeDemoError("", "Get Plan", e.getMessage(), "getPlansFromAccount", ""));
+                }
+                model.addAttribute("plans", plans);
+            }
+        } else {
+            model.addAttribute("plans", new ArrayList<Plan>());
+        }
+
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+        }
+
+    }
 
     /**
      * Show all products
@@ -42,34 +113,16 @@ public class BillingController {
      * @return
      */
     @RequestMapping(value = "product", method = RequestMethod.GET)
-    public String ShowProducts(@RequestParam(value="isNew", required=false) Boolean isNew, Model model){
+    public String showProducts(
+            @RequestParam(value="isNew", required=false) Boolean isNew,
+            @RequestParam(value="acct", required=false) String account,
+            Model model){
 
-        /*
-        List<Account> accounts = new ArrayList<>();
-        accounts.add(new stripe.api.playground.model.Account(Constants.GB_PAYMENT_SK, Constants.GB_PAYMENT_PK));
-        accounts.add(new stripe.api.playground.model.Account(Constants.GB_CONNECT_SK, Constants.GB_CONNECT_PK));
-        model.addAttribute("accounts", accounts);
-        */
-
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
-        model.addAttribute("isNew", false);
-
-        try {
-            Map<String, Object> conditions = new HashMap<>();
-            if (isNew != null && isNew){
-                model.addAttribute("isNew", true);
-            }
-            conditions = getConditions(isNew);
-            List<Product> products = billingServ.getProducts(conditions);
-            model.addAttribute("products", products);
-
-        } catch (StripeException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        model.addAttribute("accounts", StripeDemoUtil.getAccountPropertyCollections().getAccountPropertiesList());
+        model.addAttribute("stripeAccount", new StripeAccount());
         model.addAttribute("prd", new Product());
+
+        getProductsFromAccount(account, model, isNew);
 
         return Constants.LIST_PRODUCT_VIEW;
     }
@@ -83,25 +136,55 @@ public class BillingController {
      * @return
      */
     @RequestMapping(value = "/product", method = RequestMethod.POST)
-    public String createProduct (@ModelAttribute("prd") Product product, @ModelAttribute("isNew") String isNew, BindingResult result, Model model){
+    public String createProduct (
+            @ModelAttribute("prd") Product product,
+            @ModelAttribute("isNew") String isNew,
+            @ModelAttribute("accountName") String accountName,
+            @ModelAttribute("accountForNewProd") String accountForNewProd,
+            @ModelAttribute("createNewProduct") String createNewProduct,
+            BindingResult result, Model model){
 
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
-        Map<String, Object> prodReq = new HashMap<>();
-        Map<String, Object> conditions = new HashMap<>();
 
-        prodReq.put("name", product.getName());
-        prodReq.put("type", product.getType());
+        model.addAttribute("accounts", StripeDemoUtil.getAccountPropertyCollections().getAccountPropertiesList());
+        model.addAttribute("stripeAccount", new StripeAccount());
 
-        try {
-            billingServ.createProduct(prodReq);
-            conditions = getConditions(true);
-            List<Product> products = billingServ.getProducts(conditions);
-            model.addAttribute("products", products);
+        // switching accounts
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            model.addAttribute("account", getAccountPropertiesFromName(accountName));
 
-        } catch (StripeException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            getProductsFromAccount(accountName, model, Boolean.valueOf(isNew));
+
+            model.addAttribute("prd", new Product());
+        }
+
+        // create a new product
+        else if ("true".equalsIgnoreCase(createNewProduct)) {
+            if (StripeDemoUtil.isNotEmpty(accountForNewProd)){
+                model.addAttribute("account", getAccountPropertiesFromName(accountForNewProd));
+                String apiKey = getAccountSecretKeyFromName(accountForNewProd);
+                if (StripeDemoUtil.isNotEmpty(apiKey)){
+                    BillingServ billingServ = new BillingServ(apiKey);
+                    Map<String, Object> prodReq = new HashMap<>();
+                    prodReq.put("name", product.getName());
+                    prodReq.put("type", product.getType());
+
+                    try {
+                        Product prod = billingServ.createProduct(prodReq);
+                        Notification notification = new Notification("", "A new product "+ prod.getId() + " is created successfully", "createProduct");
+                        model.addAttribute("notification", notification);
+                    } catch (StripeException e) {
+                        logger.error(e.getMessage());
+                        model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Create Product", e.getMessage(), "createProduct", e.getCode()));
+                    }
+
+                    getProductsFromAccount(accountForNewProd, model, false);
+                }
+            }
+            // No account is selected
+            else {
+                logger.error("Can not create a product, because no account is selected");
+                model.addAttribute("error", new StripeDemoError("", "Create Product", "Can not create a product, because no account is selected", "createProduct", ""));
+            }
         }
 
         return Constants.LIST_PRODUCT_VIEW;
@@ -113,27 +196,16 @@ public class BillingController {
      * @return
      */
     @RequestMapping(value = "plan", method = RequestMethod.GET)
-    public String ShowPlans(@RequestParam(value="isNew", required=false) Boolean isNew, Model model){
+    public String ShowPlans(
+            @RequestParam(value="isNew", required=false) Boolean isNew,
+            @RequestParam(value="acct", required=false) String account,
+            Model model){
 
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
-        model.addAttribute("isNew", false);
-
-        try {
-            Map<String, Object> conditions = new HashMap<>();
-            if (isNew != null && isNew){
-                model.addAttribute("isNew", true);
-            }
-            conditions = getConditions(isNew);
-            List<Plan> plans = billingServ.getPlans(conditions);
-            model.addAttribute("plans", plans);
-
-        } catch (StripeException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        model.addAttribute("accounts", StripeDemoUtil.getAccountPropertyCollections().getAccountPropertiesList());
+        model.addAttribute("stripeAccount", new StripeAccount());
         model.addAttribute("planReq", new PlanReq());
+
+        getPlansFromAccount(account, model, isNew);
 
         return Constants.LIST_PLAN_VIEW;
     }
@@ -147,33 +219,54 @@ public class BillingController {
      * @return
      */
     @RequestMapping(value = "/plan", method = RequestMethod.POST)
-    public String createPlan (@ModelAttribute("planReq") PlanReq planReq, @ModelAttribute("isNew") String isNew, BindingResult result, Model model){
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
+    public String createPlan (
+            @ModelAttribute("planReq") PlanReq planReq,
+            @ModelAttribute("isNew") String isNew,
+            @ModelAttribute("accountName") String accountName,
+            @ModelAttribute("accountForNewProd") String accountForNewProd,
+            @ModelAttribute("createNewPlan") String createNewPlan,
+            BindingResult result, Model model){
 
-        Map<String, Object> conditions = new HashMap<>();
 
+        model.addAttribute("accounts", StripeDemoUtil.getAccountPropertyCollections().getAccountPropertiesList());
+        model.addAttribute("stripeAccount", new StripeAccount());
 
-        try {
-            billingServ.createPlan(planReq);
+        // switching accounts
+        if (StripeDemoUtil.isNotEmpty(accountName)){
 
-        } catch (StripeException e) {
-            logger.severe("RequestID: " + e.getRequestId() + ", Error Code: " + e.getCode() + ", Error Message: " + e.getMessage());
+            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+            //logger.info(accountName);
+            getPlansFromAccount(accountName, model, Boolean.valueOf(isNew));
+            model.addAttribute("prd", new Product());
+        }
+        // create a new product
+        else if ("true".equalsIgnoreCase(createNewPlan)) {
+            if (StripeDemoUtil.isNotEmpty(accountForNewProd)) {
 
-            RequestError error = new RequestError(e.getRequestId(), e.getCode(), e.getMessage());
-            model.addAttribute("error", error);
+                model.addAttribute("account", getAccountPropertiesFromName(accountForNewProd));
+                String apiKey = getAccountSecretKeyFromName(accountForNewProd);
+                if (StripeDemoUtil.isNotEmpty(apiKey)) {
+                    BillingServ billingServ = new BillingServ(apiKey);
+                    try {
+                        Plan plan = billingServ.createPlan(planReq);
+                        Notification notification = new Notification("", "A new plan "+ plan.getId() + " is created successfully", "createPlan");
+                        model.addAttribute("notification", notification);
+                    } catch (StripeException e) {
+                        logger.error(e.getMessage());
+                        model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Create Plan", e.getMessage(), "createPlan", e.getCode()));
+                    }
+
+                    getPlansFromAccount(accountForNewProd, model, Boolean.valueOf(isNew));
+                }
+            }
+            // No account is selected
+            else {
+                logger.error("Can not create a plan, because no account is selected");
+                StripeDemoError error = new StripeDemoError("", "Create Plan", "Can not create a plan, because no account is selected", "createPlan", "");
+                model.addAttribute("error", error);
+            }
         }
 
-        // List all plans
-        try {
-            conditions = getConditions(Boolean.parseBoolean(isNew));
-
-            List<Plan> plans = billingServ.getPlans(conditions);
-            model.addAttribute("plans", plans);
-        } catch (StripeException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         return Constants.LIST_PLAN_VIEW;
     }
@@ -185,7 +278,7 @@ public class BillingController {
      */
     @RequestMapping(value = "list-subscription", method = RequestMethod.GET)
     public String ShowAllSubscriptions(@RequestParam(value="isNew", required=false) Boolean isNew, Model model){
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
+
 
         Map<String, Object> conditions = new HashMap<>();
         try {
@@ -199,7 +292,6 @@ public class BillingController {
             e.printStackTrace();
         }
 
-        model.addAttribute("publishKey", Constants.GB_PAYMENT_PK);
         model.addAttribute("subReq", new SubscriptionReq());
 
         return Constants.LIST_SUB_VIEW;
@@ -213,7 +305,17 @@ public class BillingController {
     @RequestMapping(value = "subscription", method = RequestMethod.GET)
     public String ShowSubscriptions(Model model){
 
-        model.addAttribute("publishKey", Constants.GB_PAYMENT_PK);
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                null,
+                StripeDemoUtil.getAccountPropertyCollections(),
+                false,
+                null,
+                false,
+                null
+        );
+
+        model.addAttribute("viewObj", viewObject);
         model.addAttribute("subReq", new SubscriptionReq());
 
         return Constants.CREATE_SUB_VIEW;
@@ -229,25 +331,37 @@ public class BillingController {
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<String> createSubscription (@ModelAttribute("subReq") SubscriptionReq subReq, BindingResult result, Model model){
+    public ResponseEntity<String> createSubscription (
+            @ModelAttribute("subReq") SubscriptionReq subReq,
+            @ModelAttribute("accountName") String accountName,
+            BindingResult result, Model model){
 
-        BillingServ billingServ = new BillingServ(Constants.GB_PAYMENT_SK);
-        Subscription subscription = new Subscription();
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                StripeDemoUtil.getAccountPropertiesFromName(accountName),
+                StripeDemoUtil.getAccountPropertyCollections(),
+                true,
+                null,
+                false,
+                null
+        );
+
+        model.addAttribute("viewObj", viewObject);
+        model.addAttribute("subReq", subReq);
+
         PlaygroundResponse response = new PlaygroundResponse();
+
         try {
-            subscription = billingServ.createSub(subReq);
-            //model.addAttribute("sub", subscription);
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+            BillingServ billingServ = new BillingServ(apiKey);
+            Subscription subscription = billingServ.createSub(subReq);
             response.setBody(subscription);
 
         } catch (StripeException e) {
-            //e.printStackTrace();
-            logger.severe("RequestID: " + e.getRequestId() + ", Error Code: " + e.getCode() + ", Error Message: " + e.getMessage());
+            logger.error(e.getMessage());
             response.setError(true);
-            response.setBody(new RequestError(e.getRequestId(), e.getCode(), e.getMessage()));
+            response.setBody(new StripeDemoError(e.getRequestId(), "Create Subscription", e.getMessage(), "Create Subscription", e.getCode()));
         }
-        model.addAttribute("subReq", subReq);
-        model.addAttribute("publishKey", Constants.GB_PAYMENT_PK);
-
         return ResponseEntity.ok().body(response.toJSON());
     }
 

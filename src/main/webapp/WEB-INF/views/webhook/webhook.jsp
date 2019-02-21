@@ -130,66 +130,51 @@
 
             // accordion toggle collapse
             $('.project-accordion [data-toggle="collapse"]').on('click', function () {
+                alert("CLICK");
                 $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
             });
 
-            /*
-            $('.webhook-button').on('click', function () {
-
-                var newWebhook = $('#webhook-item').clone().show();
-                newWebhook.attr("id", "webhook-item-1");
-                $('#webhook-panel-body').append(newWebhook);
-                console.log($('#webhook-item-1 #event-type'));
-
-                $('#webhook-item-1 #event-type').text("paymentintent.created");
-                $('#webhook-item-1 #event-id').text("pi_123456");
-                $('#webhook-item-1 #event-time').text("2019-02-20");
-                $('#webhook-item-1 #event-type-content').text("paymentintent.created");
-                $('#webhook-item-1 #webhook-content').text("paymentintent.created.content");
-
-                $('#webhook-item-1 .collapsed').attr("href", "#pi1");
-                $('#webhook-item-1 .panel-collapse').attr("id", "pi1");
-            });
-            */
-
-            function receiveWebhook(){
-                var source = new EventSource("/webhook/update");
-
-                source.onmessage = function(webhook) {
-
-                    if (webhook.data != 'null'){
-                        var webhookCollection = JSON.parse(webhook.data);
-                        var dataList = webhookCollection.data;
-
-                        console.log(dataList.length);
-
-                        for (var i=0; i<dataList.length; i++){
-                            var event = JSON.parse(dataList[i]);
-
-                            console.log(event);
-                            var id = event.id;
-                            var created = new Date(event.created*1000).toLocaleString();
-                            var type = event.type;
-
-                            var newWebhook = $('#webhook-item').clone().show();
-                            newWebhook.attr("id", id);
-
-                            $('#webhook-item').after(newWebhook);
-                            $('#' + id +' #event-type').text(type);
-                            $('#' + id +' #event-id').text(id);
-                            $('#' + id +' #event-time').text(created);
-                            $('#' + id +' #event-type-content').text(type);
-                            $('#' + id +' #webhook-content').text(JSON.stringify(event, undefined, 3));
-
-                            $('#' + id +' .collapsed').attr("href", "#col-" + id);
-                            $('#' + id +' .panel-collapse').attr("id", "col-" + id);
-
-                            showNotification("New webhook received!", type);
-                        }
-                    }
-                };
-            };
+            receiveWebhook();
         });
+
+        function receiveWebhook(){
+            var source = new EventSource("/webhook/update");
+
+            source.onmessage = function(webhook) {
+
+                if (webhook.data != 'null'){
+                    var webhookCollection = JSON.parse(webhook.data);
+                    var dataList = webhookCollection.data;
+
+                    console.log(dataList.length);
+
+                    for (var i=0; i<dataList.length; i++){
+                        var event = JSON.parse(dataList[i]);
+
+                        console.log(event);
+                        var id = event.id;
+                        var created = new Date(event.created*1000).toLocaleString();
+                        var type = event.type;
+
+                        var newWebhook = $('#webhook-item').clone().show();
+                        newWebhook.attr("id", id);
+
+                        $('#webhook-item').after(newWebhook);
+                        $('#' + id +' #event-type').text(type);
+                        $('#' + id +' #event-id').text(id);
+                        $('#' + id +' #event-time').text(created);
+                        $('#' + id +' #event-type-content').text(type);
+                        $('#' + id +' #webhook-content').text(JSON.stringify(event, undefined, 3));
+
+                        $('#' + id +' .collapsed').attr("href", "#col-" + id);
+                        $('#' + id +' .panel-collapse').attr("id", "col-" + id);
+
+                        showNotification("New webhook received!", type);
+                    }
+                }
+            };
+        };
+
     </script>
 
 </body>

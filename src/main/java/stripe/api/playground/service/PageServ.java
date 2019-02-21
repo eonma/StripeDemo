@@ -42,9 +42,9 @@ public class PageServ {
         Shipping shipping = new Shipping();
         shipping.setName("John Smith");
         Address address = new Address();
-        address.setLine1("221 Old Street");
-        address.setCity("London");
-        address.setPostal_code("EC1V 9NR");
+        //address.line1("221 Old Street");
+        //address.city("London");
+        //address.setPostal_code("EC1V 9NR");
         shipping.setAddress(address);
         piReq.setShipping(shipping);
 

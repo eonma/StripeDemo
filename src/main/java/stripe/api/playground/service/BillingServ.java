@@ -3,6 +3,7 @@ package stripe.api.playground.service;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
+import org.apache.log4j.Logger;
 import stripe.api.playground.model.PlanReq;
 import stripe.api.playground.model.SubscriptionReq;
 import stripe.api.playground.util.StripeDemoUtil;
@@ -11,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * User: chenma
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 public class BillingServ {
 
-    private static final Logger logger = Logger.getLogger(BillingServ.class.getName());
+    private static final Logger logger = Logger.getLogger(BillingServ.class);
 
     private String apiKey;
 
@@ -127,7 +127,7 @@ public class BillingServ {
         }
 
         Map<String, Object> transformUsage = (Map<String, Object>) planParams.get("transform_usage");
-        if (transformUsage.get("divide_by") == null){
+        if (StripeDemoUtil.isEmpty((String) transformUsage.get("divide_by"))){
             planParams.remove("transform_usage");
         }
 

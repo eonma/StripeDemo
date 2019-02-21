@@ -4,7 +4,6 @@ package stripe.api.playground.model;
  * User: chenma
  * Date: 2019-01-11
  */
-
 public class Address {
 
     private String line1;
