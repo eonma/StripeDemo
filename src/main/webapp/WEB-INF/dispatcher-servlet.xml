@@ -22,5 +22,6 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
         </property>
     </bean>
     <mvc:resources mapping="/resources/**" location="/resources/" cache-period="31556926"/>
+    <mvc:resources mapping="/.well-known/**" location="/.well-known/" cache-period="31556926"/>
     <mvc:annotation-driven />
 </beans>

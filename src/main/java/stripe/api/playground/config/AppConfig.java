@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import stripe.api.playground.config.properties.AccountProperties;
 import stripe.api.playground.config.properties.AccountPropertyCollections;
 import stripe.api.playground.util.Constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: chenma
@@ -37,6 +36,36 @@ public class AppConfig {
         AccountPropertyCollections bean = new AccountPropertyCollections();
 
         List<AccountProperties> accountPropertiesList = new ArrayList<>();
+
+        Map<String, String> properties = new HashMap<String, String>();
+        if (environment instanceof ConfigurableEnvironment) {
+            for (org.springframework.core.env.PropertySource<?> propertySource : ((ConfigurableEnvironment) environment).getPropertySources()) {
+                if (propertySource instanceof EnumerablePropertySource) {
+                    for (String key : ((EnumerablePropertySource) propertySource).getPropertyNames()) {
+                        if (key.startsWith(Constants.PROPERTIES_ACCOUNT_PREFIX)) {
+                            properties.put(key, (String) propertySource.getProperty(key));
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Map.Entry<String, String> entry : properties.entrySet()){
+            String[] keys = entry.getKey().split("\\.");
+
+            if (keys != null && keys.length == 2){
+                //accountProperties.setAccountName(key[1]);
+                String[] values = entry.getValue().split(",");
+                if (values != null && values.length == 2){
+                    AccountProperties accountProperties = new AccountProperties(keys[1], values[0], values[1]);
+                    accountPropertiesList.add(accountProperties);
+                }
+            }
+
+        }
+
+/*
+
         List<String> accontNames = Arrays.asList(Constants.PROPERTIES_ACCOUNTS);
         Iterator<String> it = accontNames.iterator();
         while (it.hasNext()) {
@@ -48,6 +77,7 @@ public class AppConfig {
             AccountProperties accountProperties = new AccountProperties(name, publishKey, secretKey);
             accountPropertiesList.add(accountProperties);
         }
+*/
 
         bean.setAccountPropertiesList(accountPropertiesList);
 

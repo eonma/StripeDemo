@@ -605,9 +605,9 @@
             "hideEasing": "linear",
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
-        }
+        };
         toastr.error(msg, title);
-    };
+    }
 </script>
 
 </body>

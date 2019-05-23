@@ -52,118 +52,98 @@
                         <h1 class="page-title-st">Stripe API playground</h1>
                     </div>
                     <ul class="breadcrumb">
-                        <li><i class="fa fa-home"></i> Home</li>
-                        <li class="active">Dashboard</li>
+                        <li><i class="fa fa-home active"></i>Home</li>
                     </ul>
                 </div>
-
-                <br>
                 <div class="row">
-                    <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12 ">
                         <!-- METRICS -->
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 payments">
+                                <div class="widget widget-metric_8 widget-main payment-widget">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/payment.png"/>"></i>
-                                            <a href="#" class="title-st">PAYMENTS</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/payment.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #6772e5;">PAYMENTS</a>
                                         </span>
                                     </div>
                                     <div class="progress progress-xs progress-transparent custom-color-blue-st1">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">A complete payment platform.</p>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 billing">
+                                <div class="widget widget-metric_8 widget-main billing-widget">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/billing.png"/>"></i>
-                                            <a href="#" class="title-st">BILLING</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/billing.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #3ecf8e;">BILLING</a>
                                         </span>
                                     </div>
                                     <div class="progress progress-xs progress-transparent custom-color-green-st">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">Recurring billing engine.</p>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 connect">
+                                <div class="widget widget-metric_8 widget-main connect-widget">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/connect.png"/>"></i>
-                                            <a href="#" class="title-st">CONNECT</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/connect.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #45b2e8">CONNECT</a>
                                         </span>
                                     </div>
 
                                     <div class="progress progress-xs progress-transparent custom-color-cyan">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">Marketplaces, platforms and payouts.</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 issuing">
+                                <div class="widget widget-metric_8 widget-main">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/issuing.png"/>"></i>
-                                            <a href="#" class="title-st">ISSUING</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/issuing.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #6772e5;">ISSUING</a>
                                         </span>
                                     </div>
 
                                     <div class="progress progress-xs progress-transparent custom-color-blue-st2">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">Issue and manage payment cards.</p>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 terminal">
+                                <div class="widget widget-metric_8 widget-main">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/terminal.png"/>"></i>
-                                            <a href="#" class="title-st">TERMINAL</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/terminal.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #6772e5;">TERMINAL</a>
                                         </span>
                                     </div>
                                     <div class="progress progress-xs progress-transparent custom-color-blue-st3">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">Accepting in-person payment.</p>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
+                            <div class="col-md-4 other">
+                                <div class="widget widget-metric_8 widget-main">
                                     <div class="heading clearfix">
                                         <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/dashboard.png"/>"></i>
-                                            <a href="#" class="title-st">OTHER APIs</a>
+                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/integration.svg"/>"></i>
+                                            <a href="#" class="title-st" style="color: #BB5504;">OTHER APIs</a>
                                         </span>
                                     </div>
-                                    <div class="progress progress-xs progress-transparent custom-color-slate">
+                                    <div class="progress progress-xs progress-transparent custom-color-yellow">
                                         <div class="progress-bar" data-transitiongoal="100"></div>
                                     </div>
-                                    <p class="info">All other Stripe APIs.</p>
                                 </div>
                             </div>
                         </div>
                         <!-- END METRICS -->
-
-                        <!-- API panel -->
-
-
-
-                        <!-- CAMPAIGN RESULT -->
-
-                        <!-- END CAMPAIGN RESULT -->
-                        <!-- STOCK INFO -->
-                        
-                        <!-- END STOCK INFO -->
                     </div>
 
                 </div>
@@ -199,25 +179,20 @@
             $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
         });
 
+        $('#navPayment').on('mouseover',function () {
+            //alert("HERE!");
+            //$('#navPayment img').attr("src", "/resources/img/payment.svg");
+        });
 
-        // stock carousel
-        $('.widget-carousel').slick(
-            {
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                autoplay: true,
-                autoplaySpeed: 2000,
-                draggable: false,
-                swipe: false,
-                responsive: [
-                    {
-                        breakpoint: 640,
-                        settings:
-                            {
-                                slidesToShow: 1,
-                            }
-                    }]
-            });
+        $('.payment-widget').on('click', function () {
+            $('.payments').toggleClass('col-md-4').toggleClass('col-md-12');
+        })
+
+        $('.widget').on('click', function () {
+            console.log($(this).parent());
+            $(this).parent().toggleClass('col-md-4').toggleClass('col-md-12', 1000);
+        })
+
 
     });
 </script>

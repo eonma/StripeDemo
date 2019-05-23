@@ -7,10 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -46,11 +43,55 @@ public class HelloController {
         return "elements";
     }
 
+    @RequestMapping(value = "/matches", method = RequestMethod.GET)
+    public String showMatchesView(Model model){
+
+        return "matches";
+    }
+
+    @RequestMapping(value = "/ecp", method = RequestMethod.GET)
+    public String showECPView(Model model){
+
+        return "ecp";
+    }
+
+    @RequestMapping(value = "/confirm", method = RequestMethod.GET)
+    public String showConfirmView(Model model){
+
+        return "ecp_confirm";
+    }
+
+    @RequestMapping(value = "/calculateShipping", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> calculateShipping(@ModelAttribute Object data){
+
+        System.out.println(data);
+
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @RequestMapping(value = "/green_flag", method = RequestMethod.GET)
+    public String showGFView(Model model){
+
+        return "green_flag";
+    }
+
+    @RequestMapping(value = "/plum_guide", method = RequestMethod.GET)
+    public String showPGView(Model model){
+
+        return "mockups/plum_guide";
+    }
 
     @RequestMapping(value = "/event", method = RequestMethod.GET)
     public String showEvent(Model model){
         model.addAttribute("message", "message");
         return "webhook";
+    }
+
+    @RequestMapping(value = "/paypal", method = RequestMethod.GET)
+    public String showPPISU(Model model){
+        model.addAttribute("message", "message");
+        return "pp_isu";
     }
 
 
@@ -92,45 +133,4 @@ public class HelloController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-
-    @RequestMapping(value = "/event/update/1", method = RequestMethod.GET)
-    public ResponseEntity<ResponseBodyEmitter> handleRbe() {
-        ResponseBodyEmitter emitter = new ResponseBodyEmitter();
-
-
-        executor.execute(() -> {
-            try {
-                emitter.send(
-                        "/rbe" + " @ " + new Date(), MediaType.TEXT_PLAIN);
-                emitter.complete();
-            } catch (Exception ex) {
-                emitter.completeWithError(ex);
-            }
-        });
-        return new ResponseEntity(emitter, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/event/update/2", method = RequestMethod.GET)
-    public SseEmitter handleSse() {
-        SseEmitter emitter = new SseEmitter();
-        nonBlockingService.execute(() -> {
-            try {
-                emitter.send("/sse" + " @ " + new Date());
-                // we could send more events
-                emitter.complete();
-            } catch (Exception ex) {
-                emitter.completeWithError(ex);
-            }
-        });
-        return emitter;
-    }
-
-    @RequestMapping(value = "/event/update/3", method = RequestMethod.GET)
-    public ResponseEntity<StreamingResponseBody> handleRbeTwo() {
-        StreamingResponseBody stream = out -> {
-            String msg = "/srb" + " @ " + new Date();
-            out.write(msg.getBytes());
-        };
-        return new ResponseEntity(stream, HttpStatus.OK);
-    }
 }

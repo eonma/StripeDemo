@@ -604,8 +604,7 @@
             console.log("${account.accountSecretKey}");
             retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${account.accountSecretKey}");
         });
-    };
-
+    }
     function handleResult(result){
         // keep card form on the left
         var hasResponse = $('.pi-response:visible').length;
@@ -619,7 +618,7 @@
         if (result.error) {
             // Display error.message in your UI.
             $('.pi-response').append("<div class=\"alert alert-danger\"><i class=\"fa fa-times-circle\"></i> Error!</div>");
-            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>")
+            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>");
             $('.pi-response-log').text(JSON.stringify(result.error, null, 3));
             $('.pi-response').show(500);
             $('#card-button').find('.card-btn-spinner').remove();
@@ -633,7 +632,7 @@
             //$('#card-button').prop('disabled', false);
             $('.pi-retrieve').show();
         }
-    };
+    }
 </script>
 
 

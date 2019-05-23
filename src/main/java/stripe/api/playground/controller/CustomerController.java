@@ -30,7 +30,7 @@ public class CustomerController {
     @RequestMapping(value = "list-customer", method = RequestMethod.GET)
     public String showListCustomerView(Model model){
 
-        CustomerCollection customerCollection = null;
+        /*CustomerCollection customerCollection = null;
         List<CustomerRes> customerResList = new ArrayList<>();
 
         //Stripe.apiKey = Constants.GB_PAYMENT_SK;
@@ -84,7 +84,7 @@ public class CustomerController {
         }
 
         model.addAttribute("customers", customerResList);
-        System.out.println(customerResList);
+        System.out.println(customerResList);*/
 
 
         return Constants.LIST_CUSTOMER_VIEW ;

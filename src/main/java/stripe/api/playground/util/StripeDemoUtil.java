@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import stripe.api.playground.config.properties.AccountProperties;
 import stripe.api.playground.config.properties.AccountPropertyCollections;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * User: chenma
@@ -35,7 +35,8 @@ public class StripeDemoUtil {
     public static Map<String, Object> convertObjToMap(Object obj){
         ObjectMapper objMapper = new ObjectMapper();
         Map<String, Object> map = objMapper.convertValue(obj, Map.class);
-        map = removeEmptyValue(map);
+        //map = removeEmptyValue(map);
+        map = cleanMap(map);
 
         return map;
     }
@@ -49,6 +50,27 @@ public class StripeDemoUtil {
         Collection<Object> pageValues = map.values();
         while (pageValues.remove(null)) {}
         while (pageValues.remove("")) {}
+
+        return map;
+    }
+
+    public static Map<String, Object> cleanMap(Map<String, Object> map){
+
+        Collection<Object> pageValues = map.values();
+        while (pageValues.remove(null)) {}
+        while (pageValues.remove("")) {}
+
+        Iterator<String> it = map.keySet().iterator();
+        while (it.hasNext()) {
+            String key = it.next();
+            Object value = map.get(key);
+            if (value instanceof Map){
+                cleanMap((Map<String, Object>) value);
+                if (((Map<String, Object>) value).size() == 0){
+                    it.remove();
+                }
+            }
+        }
 
         return map;
     }
@@ -128,5 +150,32 @@ public class StripeDemoUtil {
             publishKey = accountProperties.getAccountPublishKey();
         }
         return publishKey;
+    }
+
+
+
+    public static Map<String, Object> getConditions(Boolean isNew) throws ParseException {
+
+        Map<String, Object> conditions = new HashMap<>();
+
+        if (isNew != null && isNew){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
+            long today = dateWithoutTime.toInstant().toEpochMilli()/1000;
+            Map<String, Object> created = new HashMap<>();
+            created.put("gte", today);
+            conditions.put("created", created);
+        }
+
+        conditions.put("limit", 100);
+
+        return conditions;
+
+    }
+
+
+    public static Map<String, Object> convertJsonToMap(String jsonStr) throws IOException {
+        Map<String,Object> map = new ObjectMapper().readValue(jsonStr, HashMap.class);
+        return map;
     }
 }

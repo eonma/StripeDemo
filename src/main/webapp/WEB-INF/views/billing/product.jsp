@@ -41,7 +41,7 @@
     <link rel="icon" type="image/png" href="<c:url value="/resources/img/favicon.ico" />">
 
 </head>
-<body class="layout-topnav ">
+<body class="layout-topnav">
 
 <!-- WRAPPER -->
 <div id="wrapper">
@@ -238,7 +238,7 @@
                 </form:form>
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn-primary-stripe-slate btn-toggle-create" id="create-product-btn"><i class="fa fa-plus"></i>New product</button>
+                        <button class="btn btn-primary-stripe-green btn-toggle-create" id="create-product-btn"><i class="fa fa-plus"></i>New product</button>
                     </div>
                 </div>
             </div>

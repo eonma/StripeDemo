@@ -1,0 +1,62 @@
+.StripeElement {
+    box-sizing: border-box;
+
+    height: 40px;
+    padding: 10px 12px;
+
+
+
+    background-color: white;
+    font-family: 'Oswald Bold';
+
+    border-color: #1b1d1b;
+    border-style: solid;
+    border-width: 2px;
+
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    background-color: #fff;
+    font-family: inherit;
+    border: 2px solid #1b1d1b;
+    box-shadow: none;
+    color: #1b1d1b;
+    display: block;
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+    padding: .5rem;
+    height: 2.4375rem;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    transition: all .15s linear;
+}
+
+.StripeElement--focus{
+    border-color: #4ee935;
+    border-style: solid;
+    border-width: 2px;
+    outline: 0;
+}
+
+.StripeElement--invalid {
+    border-color: #fc005e;
+}
+
+.StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+}
+
+.InputElement{
+    font-family: 'Oswald Bold';
+}
+
+#card-errors{
+    color: #fc005e;
+    font-family: 'Oswald Bold';
+}
+
+.gpay-button{
+    width: 100% !important;
+}
+

@@ -74,8 +74,16 @@
                 <div class="row">
                     <div class="panel panel-main">
                         <div class="panel-heading">
-                            <h3 class="panel-title">All Subscriptions - ${fn:length(subs)}</h3>
-                            <span class="client-server stripe-blue" >SERVER SIDE</span>
+                            <form:form class="form-horizontal" id="acct-form" method="post" action="list-subscription" modelAttribute="stripeAccount">
+                                <h3 class="panel-title">All Subscriptions - ${fn:length(subs)}</h3>
+                                <span class="client-server stripe-blue" >SERVER SIDE</span>
+                                <form:select path="accountProperties" id="stripe-account" class="panel-title right">
+                                    <form:option value="" label="Select account"/>
+                                    <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
+                                        <form:option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                    </c:forEach>
+                                </form:select>
+                            </form:form>
                         </div>
                         <div class="panel-body">
                             <div class="container-fluid">
@@ -103,8 +111,8 @@
                                                         <div class="dropdown" style="float: right;">
                                                             <a href="#" class="toggle-dropdown" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                             <ul class="dropdown-menu dropdown-menu-right">
+                                                                <li><a href="#" class="edit-sub" id="${sub.id}"><i class="fa fa-fw fa-edit"></i>Edit</a></li>
                                                                 <li><a href="#" class="delete-sub" id="${sub.id}"><i class="fa fa-fw fa-trash-o"></i>Cancel</a></li>
-
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -163,6 +171,10 @@
 
                                                     </div>
 
+                                                    <form id="subEditForm-${sub.id}" action="subscription/${sub.id}" method="post">
+                                                        <input type="hidden" id="acct-${sub.id}" name="acct" value="">
+                                                    </form>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -193,15 +205,43 @@
 
         $(function()
         {
+            //var accountPropertiesList = JSON.parse('${accountCollections}').accountPropertiesList ;
+
             // toggle nav active
             $('#navBilling').toggleClass('active');
             $('#navSub').toggleClass('active');
             $('#navSubList').toggleClass('active');
             
             $('#create-subscription').on('click', function () {
-                //window.location.href='subscription';
-                window.open('subscription', '_blank');
-            })
+                var account = $('#stripe-account option:selected').val();
+                window.open('subscription?acct='+account, '_blank');
+            });
+
+            // Show error message
+            if (${error != null}){
+                showErrorMsg("${error.event}", "${error.message}");
+            }
+
+            // show notification message
+            if (${notification != null}){
+                showNotification("${notification.title}", "${notification.message}");
+            }
+
+            // preselect account
+            var accountName = "${viewObj.currentAccount.accountName}";
+            $('#stripe-account option').each(function () {
+                var name = $(this).val();
+                if (name === accountName){
+                    $(this).attr("selected", "selected");
+                }
+            });
+
+            $('#stripe-account').on('change', function () {
+                var accountName = $(this).children("option:selected").val();
+
+                $(this).parent().append('<input type="hidden" name="accountName" value="' + accountName + '" /> ');
+                $(this).parent().submit();
+            });
 
 
             // accordion toggle collapse
@@ -218,22 +258,44 @@
             // retrieve subscription details
             $('.sub-id').on('click', function()
             {
-                retrieveDetails("https://api.stripe.com/v1/subscriptions/" + $(this).get(0).id);
+                retrieveDetails("https://api.stripe.com/v1/subscriptions/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
             });
 
             // retrieve plan details
             $('.plan-id').on('click', function()
             {
                 console.log($(this).get(0).id);
-                retrieveDetails("https://api.stripe.com/v1/plans/" + $(this).get(0).id);
+                retrieveDetails("https://api.stripe.com/v1/plans/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
             });
 
             // retrieve customer details
             $('.customer-id').on('click', function()
             {
                 console.log($(this).get(0).id);
-                retrieveDetails("https://api.stripe.com/v1/customers/" + $(this).get(0).id);
+                retrieveDetails("https://api.stripe.com/v1/customers/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
             });
+
+            // edit a subscription
+            $('.edit-sub').on('click', function () {
+
+                var subId = $(this).get(0).id;
+                var accountName = $('#stripe-account').children("option:selected").val();
+                $('#acct-'+subId).val(accountName);
+                Swal.fire({
+                    text: "Do you want to edit this subscription?",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'OK'
+                }).then(function (result) {
+                    //window.location = getUpdateURL(window.location.href, accountName, subId);
+
+                    //$('#subEditForm-'+subId).append('<input type="hidden" name="acct" value="' + accountName + '" /> ');
+                    //$('acct-${sub.id}').val(accountName);
+                    $('#subEditForm-'+subId).submit();
+
+                });
+            });
+
 
             // delete a subscription
             $('.delete-sub').on('click', function () {
@@ -252,7 +314,7 @@
                             url: "https://api.stripe.com/v1/subscriptions/" + subId,
                             beforeSend: function (xhr) {
 
-                                xhr.setRequestHeader("Authorization", "Bearer sk_test_9wTiIIE9XtvLgbrpMVSVJrIS");
+                                xhr.setRequestHeader("Authorization", "Bearer " + "${viewObj.currentAccount.accountSecretKey}");
                                 xhr.setRequestHeader("X-Mobile", "false");
                             },
                             success: function(result){
@@ -262,7 +324,7 @@
                                     type: 'success'
                                 }).then(function(result){
                                     if (result.value){
-                                        location.replace($(location).attr("href").replace("#", ""));
+                                        window.location = getURL(window.location.href, "${viewObj.currentAccount.accountName}");
                                     }
                                 });
                             },
@@ -275,6 +337,13 @@
                     }
                 });
             });
+
+            function getUpdateURL(originalURL, accountName, subId){
+                var url = originalURL.replace("#", "");
+                url = url.replace("list-subscription", "");
+                url = url + "update-subscription?acct=" + accountName + "&subId=" + subId;
+                return url;
+            }
         });
     </script>
 

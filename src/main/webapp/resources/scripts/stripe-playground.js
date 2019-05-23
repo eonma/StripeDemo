@@ -16,10 +16,9 @@ function showErrorMsg(title, msg){
         "hideEasing": "linear",
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
-    }
+    };
     toastr.error(msg, title);
-};
-
+}
 function showNotification(title, msg) {
     toastr.options = {
         "closeButton": false,
@@ -37,11 +36,9 @@ function showNotification(title, msg) {
         "hideEasing": "linear",
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
-    }
+    };
     toastr.info(msg, title);
-};
-
-
+}
 function retrieveDetails(url){
 
     Swal.fire({
@@ -70,8 +67,7 @@ function retrieveDetails(url){
                 }
         )
     });
-};
-
+}
 function retrieveDetails(url, secretKey){
 
     Swal.fire({
@@ -100,8 +96,7 @@ function retrieveDetails(url, secretKey){
                 }
         )
     });
-};
-
+}
 function updateStatus(url){
 
 }
@@ -137,3 +132,25 @@ function getURL(originalURL, accountName)
     url = url + "?acct=" + accountName;
     return url;
 }
+
+function getToday(){
+    var today = new Date();
+    var dd = today.getDate();
+
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd;
+    }
+
+    if(mm<10) {
+        mm='0'+mm;
+    }
+
+    today = mm+'/'+dd+'/'+yyyy;
+    return today;
+
+}
+
+
+

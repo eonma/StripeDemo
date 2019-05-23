@@ -30,6 +30,9 @@ public class PaymentIntentReq {
     private String transfer_group;
     private String payment_method_types;
     private Boolean save_payment_method;
+    private String payment_method;
+    private Boolean confirm;
+    private String confirmation_method;
 
     public String getAllowed_source_types() {
         return allowed_source_types;
@@ -181,6 +184,30 @@ public class PaymentIntentReq {
 
     public void setSave_payment_method(Boolean save_payment_method) {
         this.save_payment_method = save_payment_method;
+    }
+
+    public String getPayment_method() {
+        return payment_method;
+    }
+
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
+    }
+
+    public Boolean getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
+    }
+
+    public String getConfirmation_method() {
+        return confirmation_method;
+    }
+
+    public void setConfirmation_method(String confirmation_method) {
+        this.confirmation_method = confirmation_method;
     }
 
     /**

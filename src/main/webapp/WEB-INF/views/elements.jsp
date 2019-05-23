@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: chenma
-  Date: 2018-12-24
-  Time: 14:14
+  Date: 2019-04-14
+  Time: 10:27
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -17,17 +17,19 @@
 
 <html lang="en">
 <head>
-    <title>Welcome to Klorofil Pro | Klorofil Pro - Bootstrap Admin Dashboard Template</title>
+    <title>Stripe API playground</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
     <!-- VENDOR CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/vendor/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/font-awesome/css/font-awesome.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/themify-icons/css/themify-icons.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/pace/themes/orange/pace-theme-minimal.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/jqvmap/jqvmap.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/slick/slick.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/slick/slick-theme.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/vendor/toastr/toastr.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/vendor/sweetalert2/sweetalert2.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/vendor/bootstrap-multiselect/bootstrap-multiselect.css"/>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/main.css"/>">
@@ -38,847 +40,637 @@
     <!-- ICONS -->
     <link rel="icon" type="image/png" href="<c:url value="/resources/img/favicon.ico" />">
 
-
 </head>
+
 <body class="layout-topnav">
-<!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <!-- main navigation -->
-        <div id="navbar-menu" class="bottom-bar clearfix">
-            <div class="navbar-header">
-                <div class="brand visible-xs">
-                    <a href="index.html">
-                        <img src="<c:url value="/resources/img/logo-stripe.png"/>" alt="stripe logo" class="img-responsive logo">
-                    </a>
-                </div>
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav">
-                    <i class="ti-menu"></i>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse" id="main-nav">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="index.html" class="active"> <i><img style="width: 16px;" src="<c:url value="/resources/img/dashboard_grey.png"/>"></i> <span>Dashboard</span></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"><i><img style="width: 16px;" src="<c:url value="/resources/img/payment_grey.png"/>"></i> <span>Payments</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="layout-topnav.html">Top Navigation <span class="label label-success">NEW</span></a>
-                            </li>
-                            <li>
-                                <a href="layout-minified.html">Layout Minified</a>
-                            </li>
-                            <li>
-                                <a href="layout-fullwidth.html">Layout Fullwidth</a>
-                            </li>
-                            <li>
-                                <a href="layout-default.html">Layout Default</a>
-                            </li>
-                            <li>
-                                <a href="layout-grid.html">Grid</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"> <img style="width: 16px;" src="<c:url value="/resources/img/billing_grey.png"/>"></i> <span>Billing</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown">Submenu 1 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown" class="active">Submenu 2 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#" class="active">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Submenu 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"><img style="width: 16px;" src="<c:url value="/resources/img/connect_grey.png"/>"></i> <span>Connect</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown">Submenu 1 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown" class="active">Submenu 2 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#" class="active">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Submenu 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"><img style="width: 16px;" src="<c:url value="/resources/img/terminal_grey.png"/>"></i> <span>Terminal</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown">Submenu 1 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown" class="active">Submenu 2 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#" class="active">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Submenu 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"> </i><img style="width: 16px;" src="<c:url value="/resources/img/issuing_grey.png"/>"></i> <span>Issuing</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown">Submenu 1 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown dropdown-sub">
-                                <a href="#" data-toggle="dropdown" class="active">Submenu 2 <i class="icon-submenu ti-angle-right"></i></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Another menu level</a></li>
-                                    <li><a href="#" class="active">Another menu level</a></li>
-                                    <li><a href="#">Another menu level</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Submenu 3</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden-xs hidden-sm">
-                        <a href="#" class="btn-toggle-rightsidebar">
-                            <i class="ti-layout-sidebar-right"></i>
-                        </a>
-                    </li>
-
-                    <!--
-                    <li class="dropdown hidden-xs hidden-sm">
-                        <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
-                            <i class="ti-bell"></i>
-                            <span class="badge bg-danger">5</span>
-                        </a>
-                        <ul class="dropdown-menu notifications">
-                            <li>You have 5 new notifications</li>
-                            <li>
-                                <a href="#" class="notification-item">
-                                    <i class="fa fa-hdd-o custom-bg-red"></i>
-                                    <p>
-                                        <span class="text">System space is almost full</span>
-                                        <span class="timestamp">11 minutes ago</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="notification-item">
-                                    <i class="fa fa-tasks custom-bg-yellow"></i>
-                                    <p>
-                                        <span class="text">You have 9 unfinished tasks</span>
-                                        <span class="timestamp">20 minutes ago</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="notification-item">
-                                    <i class="fa fa-book custom-bg-green2"></i>
-                                    <p>
-                                        <span class="text">Monthly report is available</span>
-                                        <span class="timestamp">1 hour ago</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="notification-item">
-                                    <i class="fa fa-bullhorn custom-bg-purple"></i>
-                                    <p>
-                                        <span class="text">Weekly meeting in 1 hour</span>
-                                        <span class="timestamp">2 hours ago</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="notification-item">
-                                    <i class="fa fa-check custom-bg-green"></i>
-                                    <p>
-                                        <span class="text">Your request has been approved</span>
-                                        <span class="timestamp">3 days ago</span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li><a href="#" class="more">See all notifications</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="assets/img/user.png" alt="Avatar">
-                            <span>Samuel</span> <i class="ti-angle-down icon-submenu"></i></a>
-                        <ul class="dropdown-menu logged-user-menu">
-                            <li><a href="#"><i class="ti-user"></i> <span>My Profile</span></a></li>
-                            <li><a href="#"><i class="ti-email"></i> <span>Message</span></a></li>
-                            <li><a href="#"><i class="ti-settings"></i> <span>Settings</span></a></li>
-                            <li><a href="#"><i class="ti-power-off"></i> <span>Logout</span></a></li>
-                        </ul>
-                    </li>
-                    -->
-                </ul>
-            </div>
-        </div>
-        <!-- end main navigation -->
-    </nav>
+    <jsp:include page='navbar.jsp'/>
     <!-- END NAVBAR -->
+
     <!-- MAIN -->
     <div class="main">
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
+        <div class="main-content" style="min-height: 700px">
             <div class="container">
+                <!-- HEADING AND BREADCRUMB -->
                 <div class="content-heading clearfix">
                     <div class="heading-left">
-                        <h1 class="page-title-st">Dashboard</h1>
-                        <p class="page-subtitle">Stripe API playground dashboard</p>
+                        <h1 class="page-title-st">Stripe Elements</h1>
                     </div>
                     <ul class="breadcrumb">
-                        <li><i class="fa fa-home"></i> Home</li>
-                        <li class="active">Dashboard</li>
+                        <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                        <li><a href="/payments">Payments</a></li>
+                        <li class="active">Elements</li>
                     </ul>
                 </div>
-                <div class="row">
-                    <form action="/charge" method="post" id="payment-form">
-                        <div class="col-md-9">
-                            <div class="form-row" style="float:left;width: 70%;">
-                                 <span class="title">
-                                    Credit or debit card
-                                 </span>
-                                <div id="card-element">
-                                    <!-- A Stripe Element will be inserted here. -->
-                                </div>
 
-                                <!-- Used to display form errors. -->
-                                <div id="card-errors" role="alert"></div>
-                            </div>
-                            <div id="stripe"><button style="float: right; ">Submit Payment</button></div>
+                <section class="col-md-6 col-md-offset-3 " style="top:115px;">
+                    <fieldset class="card-form">
 
-                        </div>
-                    </form>
-                </div>
-                <div class="row">
-                    <div class="col-md-9">
-                        <!-- METRICS -->
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/payment.png"/>"></i>
-                                            <a href="#" class="title-st">PAYMENTINTENTS</a>
-                                        </span>
-                                    </div>
-                                    <div class="progress progress-xs progress-transparent custom-color-blue-st1">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">New way to be ready for SCA.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/connect.png"/>"></i>
-                                            <a href="#" class="title-st">CONNECT</a>
-                                        </span>
-                                    </div>
-
-                                    <div class="progress progress-xs progress-transparent custom-color-cyan">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">Marketplaces, platforms and payouts.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/payment.png"/>"></i>
-                                            <a href="#" class="title-st">CHARGES</a>
-                                        </span>
-                                    </div>
-                                    <div class="progress progress-xs progress-transparent custom-color-blue-st1">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">Create a payment on server side.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/billing.png"/>"></i>
-                                            <a href="#" class="title-st">BILLING</a>
-                                        </span>
-                                    </div>
-                                    <div class="progress progress-xs progress-transparent custom-color-green-st">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">Recurring billing engine.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/issuing.png"/>"></i>
-                                            <a href="#" class="title-st">ISSUING</a>
-                                        </span>
-                                    </div>
-
-                                    <div class="progress progress-xs progress-transparent custom-color-blue-st2">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">Issue and manage payment cards.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="widget widget-metric_8">
-                                    <div class="heading clearfix">
-                                        <span class="title">
-                                            <i><img style="width: 28px;" src="<c:url value="/resources/img/terminal.png"/>"></i>
-                                            <a href="#" class="title-st">TERMINAL</a>
-                                        </span>
-                                    </div>
-                                    <div class="progress progress-xs progress-transparent custom-color-blue-st3">
-                                        <div class="progress-bar" data-transitiongoal="100"></div>
-                                    </div>
-                                    <p class="info">Accepting in-person payment.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END METRICS -->
-                        <!-- CAMPAIGN RESULT -->
-                        <div class="panel panel-tab">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Campaign Result</h3>
-                                <ul class="nav nav-tabs pull-right">
-                                    <li class="active"><a href="#tab1" data-toggle="tab"><i class="fa fa-user-circle"></i> Social</a></li>
-                                    <li><a href="#tab2" data-toggle="tab"><i class="fa fa-envelope"></i> Newsletter</a></li>
-                                    <li><a href="#tab3" data-toggle="tab"><i class="fa fa-pie-chart"></i> Visits</a></li>
+                        <label>
+                            <span style="min-width: 30%">Card</span>
+                            <div class="card-form__element" style="width: 100%;" data-input-text="Card Number &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; MM/YY &nbsp; CVC">
+                                <ul class="card-form__layers">
+                                    <li class="card-form__layer">
+                                        <form action="">
+                                            <div id="card-element" class="card-form__input card-form__hosted-field" /></form>
+                                    </li>
                                 </ul>
                             </div>
-                            <div class="panel-body">
-                                <div class="tab-content no-padding">
-                                    <!-- tab 1 -->
-                                    <div class="tab-pane fade in active" id="tab1">
-                                        <div class="top margin-bottom-50">
-                                            <div class="row">
-                                                <div class="col-sm-10">
-                                                    <div class="period font-13">
-                                                        <span>Aug 05, 2017 - Aug 11, 2017</span>
-                                                        <br>
-                                                        <span class="previous text-muted">Jun 29, 2017 - Aug 4, 2017 (previous)</span>
-                                                    </div>
-                                                    <div class="margin-bottom-30 visible-xs"></div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <select class="form-control">
-                                                        <option>7 Days</option>
-                                                        <option>1 Month</option>
-                                                        <option>3 Months</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel-layout dashed-separator">
-                                            <div class="panel-cols-2">
-                                                <div class="widget-metric_9 text-center">
-                                                    <span class="title">Engagement</span>
-                                                    <span class="value">23,745</span>
-                                                    <span class="percentage text-indicator-green"><i class="fa fa-sort-up icon-up"></i> 14.86%</span>
-                                                    <span class="text-muted">vs. 15,443 (previous)</span>
-                                                    <div class="inlinesparkline margin-top-50">26,68,35,38,53,95,114,87,114</div>
-                                                </div>
-                                            </div>
-                                            <div class="panel-cols-2">
-                                                <div class="widget-metric_9 text-center">
-                                                    <span class="title">Page Reach</span>
-                                                    <span class="value">793,148</span>
-                                                    <span class="percentage text-indicator-red"><i class="fa fa-sort-down icon-down"></i> 8.13%</span>
-                                                    <span class="text-muted">vs. 701,954 (previous)</span>
-                                                    <div class="inlinesparkline margin-top-50">35,68,55,60,65,87,77,68,55</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end tab 1 -->
-                                    <!-- tab 2 -->
-                                    <div class="tab-pane fade" id="tab2">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <strong>Top Countries</strong>
-                                                <table class="table table-minimal table-no-border">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>COUNTRY</th>
-                                                        <th>OPENS</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>United States</td>
-                                                        <td>2936</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Algeria</td>
-                                                        <td>2812</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Russia</td>
-                                                        <td>2735</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>France</td>
-                                                        <td>2674</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Mexico</td>
-                                                        <td>2584</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Germany</td>
-                                                        <td>1986</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Brazil</td>
-                                                        <td>1921</td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div id="map-email-opens" style="height: 350px;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end tab 2 -->
-                                    <!-- tab 3 -->
-                                    <div class="tab-pane fade" id="tab3">
-                                        <div class="panel-layout dashed-separator">
-                                            <div class="panel-cols-2">
-                                                <h3 class="panel-content-title">Referrals</h3>
-                                                <ul class="list-unstyled list-referrals">
-                                                    <li>
-                                                        <p>
-                                                            <span class="value">3,454</span>
-                                                            <span class="text-muted">visits from Facebook</span>
-                                                        </p>
-                                                        <div class="progress progress-xs progress-transparent custom-color-blue">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" style="width:87%"></div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <p>
-                                                            <span class="value">2,102</span>
-                                                            <span class="text-muted">visits from Twitter</span>
-                                                        </p>
-                                                        <div class="progress progress-xs progress-transparent custom-color-purple">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width:34%"></div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <p>
-                                                            <span class="value">2,874</span>
-                                                            <span class="text-muted">visits from Affiliates</span>
-                                                        </p>
-                                                        <div class="progress progress-xs progress-transparent custom-color-green">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width:67%"></div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <p>
-                                                            <span class="value">2,874</span>
-                                                            <span class="text-muted">visits from Search</span>
-                                                        </p>
-                                                        <div class="progress progress-xs progress-transparent custom-color-yellow">
-                                                            <div class="progress-bar" role="progressbar" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100" style="width:54%"></div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="panel-cols-2">
-                                                <h3 class="panel-content-title">Traffic Sources</h3>
-                                                <div id="traffic-sources-chart"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end tab 3 -->
-                                </div>
+                        </label>
+                        <label>
+                            <span style="min-width: 30%">Name</span>
+                            <input name="name" class="field" placeholder="Joe Smith" required="true" autocomplete="off">
+                        </label>
+                        <label>
+                            <span style="min-width: 30%">Email</span>
+                            <input name="name" class="field" placeholder="joesmith@gmail.com" required="true" autocomplete="off">
+                        </label>
+                        <label>
+                            <span style="min-width: 30%">Address</span>
+                            <input name="name" class="field" placeholder="211 Old Street" required="true" autocomplete="off">
+                        </label>
+                        <label>
+                            <span style="min-width: 30%">City</span>
+                            <input name="name" class="field" placeholder="London" required="true" autocomplete="off">
+                        </label>
+                        <label>
+                            <span style="min-width: 30%">Postcode</span>
+                            <input name="name" class="field" placeholder="EC1V 9NR" required="true" autocomplete="off">
+                        </label>
+                        <label class="select">
+                            <span style="min-width: 30%">Country</span>
+                            <div id="country" class="field US">
+                                <select name="country">
+                                    <option value="AU">Australia</option>
+                                    <option value="AT">Austria</option>
+                                    <option value="BE">Belgium</option>
+                                    <option value="BR">Brazil</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="CN">China</option>
+                                    <option value="DK">Denmark</option>
+                                    <option value="FI">Finland</option>
+                                    <option value="FR">France</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="HK">Hong Kong</option>
+                                    <option value="IE">Ireland</option>
+                                    <option value="IT">Italy</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="LU">Luxembourg</option>
+                                    <option value="MX">Mexico</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="NZ">New Zealand</option>
+                                    <option value="NO">Norway</option>
+                                    <option value="PT">Portugal</option>
+                                    <option value="SG">Singapore</option>
+                                    <option value="ES">Spain</option>
+                                    <option value="SE">Sweden</option>
+                                    <option value="CH">Switzerland</option>
+                                    <option value="GB"selected="selected">United Kingdom</option>
+                                    <option value="US">United States</option>
+                                </select>
                             </div>
-                        </div>
-                        <!-- END CAMPAIGN RESULT -->
-                        <!-- STOCK INFO -->
-                        <div class="widget widget-carousel">
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">GOOGL</span>
-                                    <span class="value">
-												<span class="number">930.50</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-red"><i class="fa fa-angle-down icon-down"></i> 6.39 (0.68%)</span>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">AMZN</span>
-                                    <span class="value">
-												<span class="number">945.26</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-green"><i class="fa fa-angle-up icon-up"></i> 7.19 (0.75%)</span>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">FB</span>
-                                    <span class="value">
-												<span class="number">166.32</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-red"><i class="fa fa-angle-down icon-down"></i> 1.42 (0.75%)</span>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">AAPL</span>
-                                    <span class="value">
-												<span class="number">162.32</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-green"><i class="fa fa-angle-up icon-up"></i> 0.82 (0.51%)</span>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">TWTR</span>
-                                    <span class="value">
-												<span class="number">16.89</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-green"><i class="fa fa-angle-up icon-up"></i> 0.12 (0.72%)</span>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="widget-metric_10">
-                                    <span class="title">BABA</span>
-                                    <span class="value">
-												<span class="number">168.98</span>
-												<span class="symbol">USD</span>
-											</span>
-                                    <span class="percentage text-indicator-red"><i class="fa fa-angle-down icon-down"></i> 0.70 (0.42%)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END STOCK INFO -->
-                    </div>
-                    <div class="col-md-3">
-                        <!-- VISIT DURATION -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Visit Duration</h3>
-                            </div>
-                            <div class="panel-body">
-                                <canvas id="horizontalbar-chart" height="250"></canvas>
-                            </div>
-                        </div>
-                        <!-- END VISIT DURATION -->
-                        <!-- CUSTOMER SATISFACTION -->
-                        <div class="widget widget-metric_5">
-                            <span class="title text-muted">Customer Satisfaction</span>
-                            <ul class="list-inline list-value">
-                                <li>
-                                    <i class="fa fa-frown-o"></i>
-                                    <span class="percentage text-indicator-red">10%</span>
-                                </li>
-                                <li>
-                                    <i class="fa fa-meh-o"></i>
-                                    <span class="percentage">13%</span>
-                                </li>
-                                <li>
-                                    <i class="fa fa-smile-o"></i>
-                                    <span class="percentage text-indicator-green">77%</span>
-                                </li>
-                            </ul>
-                            <span class="note">See detailed scoring <a href="#">here</a></span>
-                        </div>
-                        <!-- END CUSTOMER SATISFACTION -->
-                        <!-- SALES CHART -->
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Sales</h3>
-                            </div>
-                            <div class="panel-body no-padding-bottom">
-                                <table class="table table-invisible">
-                                    <thead>
-                                    <tr>
-                                        <th>Period</th>
-                                        <th>Revenue</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td class="text-muted">This Week</td>
-                                        <td class="text-right">$1207</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">This Month</td>
-                                        <td class="text-right">$15821</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <canvas id="sales-chart" height="220"></canvas>
-                            </div>
-                        </div>
-                        <!-- END SALES CHART -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END MAIN CONTENT -->
+                        </label>
 
-        <!-- RIGHT SIDEBAR -->
-        <div id="sidebar-right" class="right-sidebar">
-            <div class="sidebar-widget">
-                <h4 class="widget-heading"><i class="fa fa-calendar"></i> TODAY</h4>
-                <p class="date">Wednesday, 22 December</p>
-                <div class="row margin-top-30">
-                    <div class="col-xs-4">
-                        <a href="#">
-                            <div class="icon-transparent-area custom-color-blue first">
-                                <i class="fa fa-tasks"></i>
-                                <span>Tasks</span>
-                                <span class="badge">5</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xs-4">
-                        <a href="#">
-                            <div class="icon-transparent-area custom-color-green">
-                                <i class="fa fa-envelope"></i>
-                                <span>Mail</span>
-                                <span class="badge">12</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xs-4">
-                        <a href="#">
-                            <div class="icon-transparent-area custom-color-orange last">
-                                <i class="fa fa-user-plus"></i>
-                                <span>Users</span>
-                                <span class="badge">24</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                    </fieldset>
+                </section>
             </div>
-            <div class="sidebar-widget">
-                <div class="widget-header">
-                    <h4 class="widget-heading">YOUR APPS</h4>
-                    <a href="#" class="show-all">Show all</a>
-                </div>
-                <div class="row">
-                    <div class="col-xs-3">
-                        <a href="#" class="icon-app" title="Dropbox" data-toggle="tooltip" data-placement="top">
-                            <i class="fa fa-dropbox dropbox-color"></i>
-                        </a>
-                    </div>
-                    <div class="col-xs-3">
-                        <a href="#" class="icon-app" title="WordPress" data-toggle="tooltip" data-placement="top">
-                            <i class="fa fa-wordpress wordpress-color"></i>
-                        </a>
-                    </div>
-                    <div class="col-xs-3">
-                        <a href="#" class="icon-app" title="Drupal" data-toggle="tooltip" data-placement="top">
-                            <i class="fa fa-drupal drupal-color"></i>
-                        </a>
-                    </div>
-                    <div class="col-xs-3">
-                        <a href="#" class="icon-app" title="Github" data-toggle="tooltip" data-placement="top">
-                            <i class="fa fa-github github-color"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-widget">
-                <div class="widget-header">
-                    <h4 class="widget-heading">MY PROJECTS</h4>
-                    <a href="#" class="show-all">Show all</a>
-                </div>
-                <ul class="list-unstyled list-project-progress">
-                    <li>
-                        <a href="#" class="project-name">Project XY</a>
-                        <div class="progress progress-xs progress-transparent custom-color-orange">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width:67%"></div>
-                        </div>
-                        <span class="percentage">67%</span>
-                    </li>
-                    <li>
-                        <a href="#" class="project-name">Growth Campaign</a>
-                        <div class="progress progress-xs progress-transparent custom-color-blue">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="23" aria-valuemin="0" aria-valuemax="100" style="width:23%"></div>
-                        </div>
-                        <span class="percentage">23%</span>
-                    </li>
-                    <li>
-                        <a href="#" class="project-name">Website Redesign</a>
-                        <div class="progress progress-xs progress-transparent custom-color-green">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100" style="width:87%"></div>
-                        </div>
-                        <span class="percentage">87%</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="sidebar-widget">
-                <div class="widget-header">
-                    <h4 class="widget-heading">MY FILES</h4>
-                    <a href="#" class="show-all">Show all</a>
-                </div>
-                <ul class="list-unstyled list-justify list-file-simple">
-                    <li><a href="#"><i class="fa fa-file-word-o"></i>Proposal_draft.docx</a>
-                        <span>4 MB</span>
-                    </li>
-                    <li><a href="#"><i class="fa fa-file-pdf-o"></i>Manual_Guide.pdf</a>
-                        <span>20 MB</span>
-                    </li>
-                    <li><a href="#"><i class="fa fa-file-zip-o"></i>all-project-files.zip</a>
-                        <span>315 MB</span>
-                    </li>
-                    <li><a href="#"><i class="fa fa-file-excel-o"></i>budget_estimate.xls</a>
-                        <span>1 MB</span>
-                    </li>
-                </ul>
-            </div>
-            <p class="text-center"><a href="#" class="btn btn-default btn-xs">More Widgets</a></p>
         </div>
-        <!-- END RIGHT SIDEBAR -->
     </div>
     <!-- END MAIN -->
-    <div class="clearfix"></div>
 </div>
-<!-- END WRAPPER -->
+
+<style>
+    /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+    * {
+        box-sizing: border-box;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+
+
+    .card-form {
+        position: relative;
+        top: 25%;
+        -webkit-transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0);
+        -moz-transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0);
+        -ms-transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0);
+        -o-transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0);
+        transform: perspective(1000px) translate3d(0, 0, 0) rotateX(0);
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        /*background-image: linear-gradient(180deg, #FAFAFA 0%, #F2F2F2 100%);*/
+        background-color: white;
+        border: 1px solid #D8D8D8;
+        box-shadow: 0px 0 0 0px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        -webkit-animation: rotate-form 1200ms 1000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+        -moz-animation: rotate-form 1200ms 1000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+    }
+
+    /*.card-form__inner {
+        padding: 24px;
+        font-size: 0;
+    }*/
+
+
+    .card-form__input {
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        /*border: 1px solid #d8d8d8;*/
+        /*border-radius: 4px;*/
+        /*padding: 12px;*/
+        width: 100%;
+    }
+    .card-form__input iframe {
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+
+    .card-form__element {
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        position: relative;
+        /*margin-bottom: 12px;*/
+        /*font-size: 16px;*/
+        background: transparent;
+        /*border: 1px solid transparent;*/
+        border-radius: 6px;
+        -webkit-animation: explode-layers 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+        -moz-animation: explode-layers 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+    }
+    .card-form__element:before, .card-form__element:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        opacity: 0;
+    }
+    .card-form__element:after {
+        content: attr(data-input-text);
+        z-index: -2;
+        padding-top: 12px;
+        padding-left: 18px;
+        box-sizing: border-box;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        background: rgba(58, 59, 60, 0.05);
+        /*border: 1px dashed white;*/
+        color: rgba(0, 0, 0, 0.5);
+        -webkit-animation: explode-after 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+        -moz-animation: explode-after 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+    }
+    .card-form__element:before {
+        content: '';
+        z-index: -1;
+        background: rgba(103, 114, 229, 0.4);
+        border: 1px solid #6772e5;
+        -webkit-animation: explode-before 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+        -moz-animation: explode-before 1200ms 2000ms 1 forwards cubic-bezier(0.44, 0.22, 0, 1);
+        -webkit-transform: perspective(0) translate3d(0, 0, 0);
+        -moz-transform: perspective(0) translate3d(0, 0, 0);
+        -ms-transform: perspective(0) translate3d(0, 0, 0);
+        -o-transform: perspective(0) translate3d(0, 0, 0);
+        transform: perspective(0) translate3d(0, 0, 0);
+    }
+
+    .card-form__layers {
+        height: 100%;
+        padding: 4px;
+        border-radius: 6px;
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0.15);
+        background-color: transparent;
+        border: none;
+    }
+
+    .card-form__layer {
+
+        background-color: transparent;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        line-height: 48px;
+        border-radius: 6px;
+    }
+
+    .StripeElement {
+        box-shadow: none !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    .half {
+        width: 49%;
+        display: inline-block;
+        margin-right: 1%;
+    }
+    .half:last-child {
+        margin-right: 0;
+        float: right;
+    }
+
+    @-webkit-keyframes rotate-form {
+        to {
+            /*box-shadow: 1px 2px 0 #ccc, 3px 4px 0 #ccc;*/
+            -webkit-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(30deg);
+            -moz-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(30deg);
+            -ms-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(30deg);
+            -o-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(30deg);
+            transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(30deg);
+        }
+    }
+    @-moz-keyframes rotate-form {
+        to {
+            /*box-shadow: 1px 2px 0 #ccc, 3px 4px 0 #ccc;*/
+            -webkit-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(35deg);
+            -moz-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(35deg);
+            -ms-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(35deg);
+            -o-transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(35deg);
+            transform: translate3d(0, 0, 0) rotateX(45deg) rotateZ(35deg);
+        }
+    }
+    @-webkit-keyframes explode-layers {
+        to {
+            -webkit-transform: translate3d(-38px, -100%, 0);
+            -moz-transform: translate3d(-38px, -100%, 0);
+            -ms-transform: translate3d(-38px, -100%, 0);
+            -o-transform: translate3d(-38px, -100%, 0);
+            transform: translate3d(-38px, -100%, 0);
+            /*border: 1px solid #BFBFBF;*/
+        }
+    }
+    @-moz-keyframes explode-layers {
+        100% {
+            -webkit-transform: translate3d(-38px, -100%, 0);
+            -moz-transform: translate3d(-38px, -100%, 0);
+            -ms-transform: translate3d(-38px, -100%, 0);
+            -o-transform: translate3d(-38px, -100%, 0);
+            transform: translate3d(-38px, -100%, 0);
+            border: 1px solid rgba(0, 0, 0, 0.25);
+        }
+    }
+    @-webkit-keyframes explode-before {
+        to {
+            opacity: 1;
+            -webkit-transform: translate3d(59px, 50%, 0);
+            -moz-transform: translate3d(59px, 50%, 0);
+            -ms-transform: translate3d(19px, 50%, 0);
+            -o-transform: translate3d(19px, 50%, 0);
+            transform: translate3d(0px, 0%, 0);
+        }
+    }
+    @-moz-keyframes explode-before {
+        to {
+            opacity: 1;
+            -webkit-transform: translate3d(19px, 50%, 0);
+            -moz-transform: translate3d(19px, 50%, 0);
+            -ms-transform: translate3d(19px, 50%, 0);
+            -o-transform: translate3d(19px, 50%, 0);
+            transform: translate3d(19px, 50%, 0);
+        }
+    }
+    @-webkit-keyframes explode-after {
+        to {
+            opacity: 1;
+            -webkit-transform: translate3d(38px, 100%, 0);
+            -moz-transform: translate3d(38px, 100%, 0);
+            -ms-transform: translate3d(38px, 100%, 0);
+            -o-transform: translate3d(38px, 100%, 0);
+            transform: translate3d(38px, 95%, 0);
+        }
+    }
+    @-moz-keyframes explode-after {
+        to {
+            opacity: 1;
+            -webkit-transform: translate3d(38px, 100%, 0);
+            -moz-transform: translate3d(38px, 100%, 0);
+            -ms-transform: translate3d(38px, 100%, 0);
+            -o-transform: translate3d(38px, 100%, 0);
+            transform: translate3d(38px, 100%, 0);
+        }
+    }
+    .cf:before,
+    .cf:after {
+        content: " ";
+        /* 1 */
+        display: table;
+        /* 2 */
+    }
+
+    .cf:after {
+        clear: both;
+    }
+
+    .cf {
+        *zoom: 1;
+    }
+
+</style>
+
 <!-- Javascript -->
-<script src="<c:url value="https://js.stripe.com/v3/"/>"></script>
 <script src="<c:url value="/resources/vendor/jquery/jquery.min.js"/>"></script>
 <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/resources/vendor/pace/pace.min.js"/>"></script>
-<script src="<c:url value="/resources/vendor/bootstrap-progressbar/js/bootstrap-progressbar.min.js"/>"></script>
-<script src="<c:url value="/resources/vendor/jquery-sparkline/js/jquery.sparkline.min.js"/>"></script>
-<script src="<c:url value="/resources/vendor/jqvmap/jquery.vmap.min.js"/>"></script>
-<script src="<c:url value="/resources/vendor/jqvmap/maps/jquery.vmap.world.js"/>"></script>
-<script src="<c:url value="/resources/vendor/Flot/jquery.flot.js"/>"></script>
-<script src="<c:url value="/resources/vendor/Flot/jquery.flot.resize.js"/>"></script>
-<script src="<c:url value="/resources/vendor/Flot/jquery.flot.pie.js"/>"></script>
-<script src="<c:url value="/resources/vendor/flot.tooltip/jquery.flot.tooltip.js"/>"></script>
-<script src="<c:url value="/resources/vendor/slick/slick.min.js"/>"></script>
-<script src="<c:url value="/resources/vendor/chart-js/Chart.min.js"/>"></script>
+<script src="<c:url value="/resources/vendor/toastr/toastr.min.js"/>"></script>
 <script src="<c:url value="/resources/scripts/klorofilpro-common.js"/>"></script>
+<script src="<c:url value="/resources/scripts/stripe-playground.js"/>"></script>
+<script src="<c:url value="/resources/scripts/serializeToJSON.js"/>"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.0.3/dist/sweetalert2.all.min.js"></script>
+<script src="<c:url value="/resources/vendor/bootstrap-multiselect/bootstrap-multiselect.js"/>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
 
 <script>
-    // Create a Stripe client.
-    var stripe = Stripe('pk_test_zKiUvTSQ3Orgh2ht3lC4LXQp');
 
-    // Create an instance of Elements.
-    var elements = stripe.elements();
+    $(function(){
+        // toggle nav active
+        $('#navPayment').toggleClass('active');
+        $('#navPi').toggleClass('active');
+        $('#navCreatePiManual').toggleClass('active');
 
-    // Custom styling can be passed to options when creating an Element.
-    // (Note that this demo uses a wider set of styles than the guide below.)
-    var style = {
-        base: {
-            color: '#32325d',
-            lineHeight: '18px',
-            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#aab7c4'
-            }
-        },
-        invalid: {
-            color: '#fa755a',
-            iconColor: '#fa755a'
-        }
-    };
 
-    // Create an instance of the card Element.
-    var card = elements.create('card', {style: style});
 
-    // Add an instance of the card Element into the `card-element` <div>.
-    card.mount('#card-element');
+        var stripe = Stripe("pk_test_1xnx7cgl5GI19qFxg3bOcBD5");
+        var elements = stripe.elements();
 
-    // Handle real-time validation errors from the card Element.
-    card.addEventListener('change', function(event) {
-        var displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
-        }
-    });
+        var style = {
+            base: {
+                color: '#5e6773',
+                fontSize: '14px',
+                '::placeholder': {
+                    color: '#525f7f'
+                },
+            },
+            invalid: {
+                color: '#e5424d',
+            },
+        };
 
-    // Handle form submission.
-    var form = document.getElementById('payment-form');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+        var cardElement = elements.create('card', {
+            hidePostalCode : true,
+            style : style
+        });
+        cardElement.mount('#card-element');
 
-        stripe.createToken(card).then(function(result) {
-            if (result.error) {
-                // Inform the user if there was an error.
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
+
+
+
+
+        // accordion toggle collapse
+        $('.project-accordion [data-toggle="collapse"]').on('click', function()
+        {
+            $(this).find('.toggle-icon').toggleClass('fa-minus-circle fa-plus-circle');
+        });
+
+
+        $('fieldset [data-toggle="collapse"]').on('click', function()
+        {
+            $(this).find('.toggle-icon').toggleClass('fa-caret-up fa-caret-down ');
+        });
+
+        /**
+         * Select a Stripe account to make API calls
+         */
+        $('#stripe-account').on('change', function () {
+            var accountName = $(this).children("option:selected").val();
+            $('#account-name').val(accountName);
+
+            if (accountName !== ""){
+                $.ajax({
+                    type : "GET",
+                    url : "getAccount",
+                    data: "acctName="+accountName,
+                    success: function(result){
+                        renderStripeElements(result);
+                        $('#card-details').show();
+                    }
+                });
+
             } else {
-                // Send the token to your server.
-                stripeTokenHandler(result.token);
+                $('#card-details').hide();
+                $('#card-element').remove();
             }
         });
+
+        /**
+         * Render Stripe Elements
+         * @param account
+         */
+        function renderStripeElements(account){
+            $('#card-element').remove();
+            $('#stripe-card').append("<div id=\"card-element\"></div>");
+
+            var stripe = Stripe("pk_test_1xnx7cgl5GI19qFxg3bOcBD5");
+            var elements = stripe.elements();
+
+            var style = {
+                base: {
+                    color: '#5e6773',
+                    fontSize: '14px',
+                    '::placeholder': {
+                        color: '#ccc'
+                    },
+                },
+                invalid: {
+                    color: '#e5424d',
+                },
+            };
+
+            var cardElement = elements.create('card', {
+                hidePostalCode : true,
+                style : style
+            });
+            cardElement.mount('#card-element');
+
+            cardElement.on('change', function (event) {
+                if (event.error){
+                    $('#card-errors').html(event.error.message);
+                } else {
+                    $('#card-errors').html("");
+                }
+            });
+
+            // create a payment method on client side
+            $('#pm-button').on('click', function(){
+                $('#pm-button').append("<i class=\"fa fa-spinner fa-spin card-btn-spinner\"></i>");
+                $('#pm-button').prop('disabled', true);
+
+                var data = $('#card-form').serializeToJSON();
+
+                stripe.createPaymentMethod('card', cardElement, data).then(function(result) {
+
+                    console.log(result);
+
+                    if (result.error){
+                        $('#pm-button').prop('disabled', false);
+                        showErrorMsg(result.error.code, result.error.message);
+                    } else {
+                        // Show payment_method_id result
+                        $('.pm-id').append(result.paymentMethod.id);
+                        $('.pm-id').attr("id", result.paymentMethod.id);
+                        $('#pm-display').show();
+
+                        // add payment_method_id into server params
+                        $('#paymentMethod').val(result.paymentMethod.id);
+
+                        // disable account selection
+                        $('#stripe-account').attr('disabled', 'disabled');
+
+                        // show and nav to server params
+                        $('#server-params').show();
+                        $('html, body').animate({scrollTop: $('#server-params').offset().top}, 500);
+                    }
+                    $('.card-btn-spinner').remove();
+                });
+            });
+        };
+
+
+
+
+        /**
+         * Submit createPaymentIntent request to server
+         */
+        $('#pi-create-btn').on('click', function () {
+            var data = $('#piForm').serializeToJSON();
+            console.log(data);
+
+            $.ajax({
+                type : "POST",
+                url : "payment_intent_manual",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json",
+
+                success: function(response){
+
+                    var apiResponse = response.apiResponse;
+                    console.log(apiResponse);
+                    //loopObject(apiResponse, '');
+
+                    var responseCode = response.code;
+                    switch (responseCode){
+                        case 'SUCCESS':
+                            console.log("SUCCESS");
+                            // show success
+
+                            break;
+
+                        case 'SUCCESS_PROCESSING':
+
+                        case 'SUCCESS_CANCELED':
+
+                        case 'ERROR':
+                            console.log("HERE-E");
+
+                            break;
+
+                        case 'REQUIRE_ACTION':
+                            console.log("REQUIRE_ACTION");
+                            var action = response.action;
+
+                            switch (action.code){
+                                case 'REDIRECT_TO_URL':
+                                    // go to client and show redirect button
+                                    $('html, body').animate({scrollTop: $('#client-params').offset().top}, 500);
+                                    $('#card-params').toggleClass('col-md-offset-2', 500);
+                                    $('#action-text').html('redirect_to_url');
+                                    $('#action-params').show();
+                                    $('#redirect-button').show();
+                                    $('#redirect-button').attr('data-toggle', action.body);
+
+                                case 'USE_STRIPE_SDK':
+                                    // go to client and show handleCardAction button
+                                    $('html, body').animate({scrollTop: $('#client-params').offset().top}, 500);
+                                    $('#card-params').toggleClass('col-md-offset-2', 500);
+                                    $('#action-text').html('use_stripe_sdk');
+                                    $('#action-params').show();
+                                    $('#sdk-button').show();
+                                    $('#sdk-button').attr('data-toggle', action.body);
+
+                                case 'REQUIRES_PAYMENT_METHOD':
+                                // this shouldn't happen at all here
+
+                                case 'REQUIRES_CONFIRMATION':
+                                    // show confirm PI button
+                                    $('#create-btn').toggleClass('col-md-offset-8').toggleClass('col-md-offset-4');
+                                    $('#confirm-btn').show();
+
+                                case 'REQUIRES_CAPTURE':
+                                    // show capture PI panel
+                                    $('#capture-params').show();
+                                    $('html, body').animate({scrollTop: $('#capture-params').offset().top}, 500);
+                            }
+
+                            break;
+                    }
+
+                }
+            });
+        });
+
+
+        $('#pi-capture-btn').on('click', function () {
+
+            $('html, body').animate({scrollTop: $('.main').offset().top}, 500);
+            $('#card-params').toggleClass('col-md-offset-2', 500);
+            $('#action-title').html('redirect_to_url');
+            $('#action-content').html('https://hooks.stripe.com/redirect/authenticate/src_1EQDsGGGaTfhElOZBgnychph?client_secret=src_client_secret_Eu1wLZMuH8QMQfu6mkkRAQtF');
+            $('#action-params').show();
+            $('#sdk-button').show();
+            $('#sdk-button').attr('data-toggle', 'client_secret');
+        })
+
+
+        function loopObject(obj, name){
+            for (var key in obj) {
+
+                var keyName = key;
+                if (name !== ''){
+                    keyName = name + "." + key;
+                }
+                var value = obj[key];
+
+                if (value instanceof Object){
+                    console.log(key + " is an OBJECT");
+                    loopObject(value, key);
+
+                } else {
+                    console.log(keyName + " = " + value);
+                }
+
+
+            };
+        };
     });
 
-    // Submit the form with the token ID.
-    function stripeTokenHandler(token) {
-        // Insert the token ID into the form so it gets submitted to the server
-        var form = document.getElementById('payment-form');
-        var hiddenInput = document.createElement('input');
-        hiddenInput.setAttribute('type', 'hidden');
-        hiddenInput.setAttribute('name', 'stripeToken');
-        hiddenInput.setAttribute('value', token.id);
-        form.appendChild(hiddenInput);
-
-        // Submit the form
-        form.submit();
-    }
 </script>
-
 </body>
 </html>
-

@@ -50,7 +50,7 @@
         else {
             document.getElementById("serverData").innerHTML="Whoops! Your browser doesn't receive server-sent events.";
         }*/
-    };
+    }
     function newWebhookHandler(event) {
         console.log("New webhook is received");
     }

@@ -1,7 +1,9 @@
 package stripe.api.playground.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
+import com.stripe.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,12 @@ import stripe.api.playground.service.PaymentServ;
 import stripe.api.playground.util.Constants;
 import stripe.api.playground.util.StripeDemoUtil;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * User: chenma
  * Date: 2019-01-02
@@ -25,19 +33,10 @@ public class PaymentController {
 
     private static final Logger logger = Logger.getLogger(PaymentController.class);
 
-    @RequestMapping(value = "getAccount", method = RequestMethod.GET)
-    @ResponseBody
-    public AccountProperties getPublishKey(
-            @RequestParam(value="acctName", required=false) String accountName,
-            Model model){
-
-        AccountProperties accountProperties = StripeDemoUtil.getAccountPropertiesFromName(accountName);
-        return accountProperties;
-    }
 
 
     /**
-     * Show PaymentIntent page
+     * Show PaymentIntent auto confirmation page
      * @param model
      * @return
      */
@@ -92,6 +91,41 @@ public class PaymentController {
                 PaymentServ paymentServ = new PaymentServ(apiKey);
                 PaymentIntent paymentIntent = paymentServ.createPaymentIntent(piReq);
                 viewObject.setResponse(paymentIntent);
+
+                // check if customer is passed and has sources
+                String customerId = paymentIntent.getCustomer();
+
+                if (StripeDemoUtil.isNotEmpty(customerId)){
+                    Customer customer = paymentServ.retrieveCustomer(customerId);
+                    List<PaymentSource> dataList = customer.getSources().getData();
+                    PaymentMethodRes pmRes = new PaymentMethodRes();
+                    List<PaymentMethodRes.Card> cardList = new ArrayList<>();
+                    pmRes.setCard(cardList);
+                    model.addAttribute("pmRes", pmRes);
+
+                    Iterator<PaymentSource> it = dataList.iterator();
+                    while (it.hasNext()) {
+                        PaymentSource ea = it.next();
+
+                        if (ea instanceof Source){
+                            Source source = (Source) ea;
+                            String type = source.getType();
+
+                            if ("card".equalsIgnoreCase(type)){
+                                Source.Card card = source.getCard();
+                                PaymentMethodRes.Card cardRes = new PaymentMethodRes.Card();
+                                cardRes.setId(source.getId());
+                                cardRes.setBrand(card.getBrand());
+                                cardRes.setLast4(card.getLast4());
+                                cardRes.setExpMonth(card.getExpMonth().toString());
+                                cardRes.setExpYear(card.getExpYear().toString());
+                                cardList.add(cardRes);
+                            }
+
+                        }
+                    }
+
+                }
             } catch (StripeException e) {
                 logger.error(e.getMessage());
                 viewObject.setHasError(true);
@@ -133,6 +167,54 @@ public class PaymentController {
             response.setBody(new RequestError(e.getRequestId(), e.getCode(), e.getMessage()));
         }
         return ResponseEntity.ok().body(response.toJSON());
+    }
+
+    /**
+     * Show Refund Payment page
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "refund", method = RequestMethod.GET)
+    public String showRefundView(Model model){
+
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                null,
+                StripeDemoUtil.getAccountPropertyCollections(),
+                false,
+                null,
+                false,
+                null
+        );
+
+        model.addAttribute("viewObj", viewObject);
+        model.addAttribute("refundReq", new RefundReq());
+
+        return Constants.CREATE_REFUND_VIEW;
+    }
+
+    /**
+     * Show Refund Application Fee page
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "refund-fee", method = RequestMethod.GET)
+    public String showRefundFeeView(Model model){
+
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                null,
+                StripeDemoUtil.getAccountPropertyCollections(),
+                false,
+                null,
+                false,
+                null
+        );
+
+        model.addAttribute("viewObj", viewObject);
+        model.addAttribute("refundReq", new RefundReq());
+
+        return Constants.CREATE_REFUND_APP_FEE_VIEW;
     }
 
 }

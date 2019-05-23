@@ -12,6 +12,9 @@ public class Address {
     private String state;
     private String postal_code;
 
+    public Address() {
+    }
+
     public String getLine1() {
         return line1;
     }

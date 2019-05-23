@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/vendor/pace/themes/orange/pace-theme-minimal.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/toastr/toastr.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/sweetalert2/sweetalert2.css"/>">
+    <link rel="stylesheet" href="<c:url value="/resources/vendor/bootstrap-multiselect/bootstrap-multiselect.css"/>">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/main.css"/>">
@@ -40,6 +41,7 @@
 
 </head>
 <body class="layout-topnav">
+
 <div id="wrapper">
     <!-- NAVBAR -->
     <jsp:include page='../navbar.jsp'/>
@@ -55,8 +57,8 @@
                         <h1 class="page-title-st">PaymentIntent</h1>
                     </div>
                     <ul class="breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li><a href="#">Payments</a></li>
+                        <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                        <li><a href="/payments">Payments</a></li>
                         <li class="active">PaymentIntent</li>
                     </ul>
                 </div>
@@ -68,7 +70,7 @@
                             <span class="client-server stripe-blue">SERVER SIDE</span>
                             <h3 class="panel-title">Create a PaymentIntent - server side</h3>
 
-                            <select id="stripe-account" class="panel-title right" style="position: absolute;left: 70%;">
+                            <select id="stripe-account" class="panel-title right acct-sel" style="position: absolute;left: 70%;">
                                 <option value="" label="Select account"/>
                                 <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
                                     <option value="${account.accountName}" label="Account - ${account.accountName}"/>
@@ -90,14 +92,14 @@
                                             <div class="project-info">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="col-sm-6 control-label"><b>amount</b></label>
-                                                        <div class="col-sm-6">
+                                                        <label class="col-sm-5 control-label"><b>amount</b></label>
+                                                        <div class="col-sm-7">
                                                             <form:input path="amount" class="form-control" id="amount" value="${piReq.amount}" />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-6 control-label"><b>currency</b></label>
-                                                        <div class="col-sm-6">
+                                                        <label class="col-sm-5 control-label"><b>currency</b></label>
+                                                        <div class="col-sm-7 dropdown-select">
                                                             <form:select path="currency" id="currency" class="form-control" itemValue="${piReq.currency}">
                                                                 <form:option value="gbp" label="gbp"/>
                                                                 <form:option value="usd" label="usd"/>
@@ -105,37 +107,64 @@
                                                             </form:select>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-5 control-label">confirm</label>
+                                                        <div class="col-sm-7 dropdown-select">
+                                                            <form:select path="confirm" id="confirm" class="form-control" itemValue="${piReq.confirm}">
+                                                                <form:option value="true"/>
+                                                                <form:option value="false"/>
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="col-sm-6 control-label"><b>payment_method_types</b></label>
-                                                        <div class="col-sm-6">
+                                                        <label class="col-sm-5 control-label"><b>payment_method_types</b></label>
+                                                        <div class="col-sm-7 dropdown-select">
                                                             <form:select path="payment_method_types" id="paymentMethodTypes" class="form-control" itemValue="${piReq.payment_method_types}">
                                                                 <form:option value="card" label="card"/>
                                                             </form:select>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-6 control-label">capture_method</label>
-                                                        <div class="col-sm-6">
+                                                        <label class="col-sm-5 control-label">capture_method</label>
+                                                        <div class="col-sm-7 dropdown-select">
                                                             <form:select path="capture_method" id="captureMethod" class="form-control" itemValue="${piReq.capture_method}">
                                                                 <form:option value="automatic"/>
                                                                 <form:option value="manual" />
                                                             </form:select>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-5 control-label">confirmation_method</label>
+                                                        <div class="col-sm-7 dropdown-select">
+                                                            <form:select path="confirmation_method" id="confirmationMethod" class="form-control" itemValue="${piReq.capture_method}">
+                                                                <form:option value="automatic" />
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="col-sm-4 control-label">customer</label>
-                                                        <div class="col-sm-8">
+                                                        <label class="col-sm-5 control-label">payment_method</label>
+                                                        <div class="col-sm-7">
+                                                            <form:input path="payment_method" class="form-control" id="paymentMethod" value="${piReq.payment_method}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-5 control-label">customer</label>
+                                                        <div class="col-sm-7">
                                                             <form:input path="customer" class="form-control" id="customer" value="${piReq.customer}"/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-4 control-label">source</label>
-                                                        <div class="col-sm-8">
-                                                            <form:input path="source" class="form-control" id="source" value="${piReq.source}"/>
+                                                        <label class="col-sm-5 control-label">save_payment_method</label>
+                                                        <div class="col-sm-7 dropdown-select">
+                                                            <form:select path="save_payment_method" id="savePaymentMethod" class="form-control" itemValue="${piReq.save_payment_method}">
+                                                                <form:option value="" label="----" />
+                                                                <form:option value="true" />
+                                                                <form:option value="false"  />
+                                                            </form:select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -159,16 +188,6 @@
                                                             </div>
                                                             <div id="collapse1" class="panel-collapse collapse">
                                                                 <div class="panel-body">
-                                                                    <div class="form-group">
-                                                                        <label class="col-sm-6 control-label">save_payment_method</label>
-                                                                        <div class="col-sm-6">
-                                                                            <form:select path="save_payment_method" id="savePaymentMethod" class="form-control" itemValue="${piReq.save_payment_method}">
-                                                                                <form:option value="" label="----" />
-                                                                                <form:option value="true" />
-                                                                                <form:option value="false"  />
-                                                                            </form:select>
-                                                                        </div>
-                                                                    </div>
                                                                     <div class="form-group">
                                                                         <label class="col-sm-6 control-label">description</label>
                                                                         <div class="col-sm-6">
@@ -351,7 +370,7 @@
                 <!-- PI CLIENT PANEL -->
                 <c:if test="${viewObj.hasResponse && !viewObj.hasError}">
                     <div class="row">
-                        <div class="panel panel-main pi-client" id="piClient" style="border-top: 2px solid #1ea672">
+                        <div class="panel panel-main pi-client panel-client" id="piClient">
                             <div class="panel-heading">
                                 <span class="client-server stripe-green">CLIENT SIDE</span>
                                 <h3 class="panel-title">PaymentIntent created - "<a href="#" id="${viewObj.response.id}" class="pi-id">${viewObj.response.id}</a>"</h3>
@@ -359,6 +378,43 @@
                             <div class="panel-body">
                                 <div class="col-md-6 col-md-offset-2 card-form">
                                     <div class="form-horizontal">
+                                        <!-- Select saved card -->
+                                        <c:if test="${not empty pmRes}">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Select saved card</label>
+                                                <div class="col-sm-8">
+                                                    <c:forEach items="${pmRes.card}" var="card">
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" value="${card.id}" name="card">
+                                                            <span>
+                                                            <i></i>&nbsp;
+                                                            <c:choose>
+                                                                <c:when test="${card.brand == 'Visa'}">
+                                                                    <img style="width: 28px;" src="/resources/img/visa.svg">
+                                                                </c:when>
+                                                                <c:when test="${card.brand == 'MasterCard'}">
+                                                                    <img style="width: 28px;" src="/resources/img/mastercard.svg">
+                                                                </c:when>
+                                                                <c:when test="${card.brand == 'American Express'}">
+                                                                    <img style="width: 28px;" src="/resources/img/amex.svg">
+                                                                </c:when>
+                                                            </c:choose>
+                                                                &nbsp;&nbsp;&nbsp;
+                                                            .... ${card.last4} &nbsp;&nbsp;&nbsp;
+                                                                    ${card.expMonth} / ${card.expYear}
+                                                        </span>
+                                                        </label>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        <div class="form-group">
+                                            <div class="col-sm-8 col-sm-offset-4">
+                                                <div id="payment-request-button" class="payment-request-button" style=" border:0;padding:0;">
+                                                <!-- A Stripe Element will be inserted here. -->
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Name</label>
                                             <div class="col-sm-8">
@@ -461,11 +517,12 @@
 <script src="<c:url value="/resources/scripts/stripe-playground.js"/>"></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.0.3/dist/sweetalert2.all.min.js"></script>
+<script src="<c:url value="/resources/vendor/bootstrap-multiselect/bootstrap-multiselect.js"/>"></script>
 
 
 <script>
-    $(function()
-    {
+
+    $(function(){
         // toggle nav active
         $('#navPayment').toggleClass('active');
         $('#navPi').toggleClass('active');
@@ -506,6 +563,8 @@
 
             // render elements
             renderStripeElements("${viewObj.response.clientSecret}","${viewObj.currentAccount.accountPublishKey}");
+
+            //renderPaymentRequestButton("${viewObj.currentAccount.accountPublishKey}");
         }
 
         // retrieve a PaymentIntent from server
@@ -527,140 +586,159 @@
             });
 
         });
-    });
 
-    // Stripe elements
-    function renderStripeElements(clientSecret, publishKey){
-        /* do some toggles*/
-        $('.pi-response').hide();
+        // Stripe elements
+        function renderStripeElements(clientSecret, publishKey){
+            /* do some toggles*/
+            $('.pi-response').hide();
 
-        var stripe = Stripe(publishKey, {
-            betas: ['payment_intent_beta_3']
-        });
-
-        var elements = stripe.elements();
-
-        var style = {
-            base: {
-                color: '#5e6773',
-                fontSize: '14px',
-                '::placeholder': {
-                    color: '#ccc',
-                },
-            },
-            invalid: {
-                color: '#e5424d',
-                ':focus': {
-                    color: '#303238',
-                },
-            },
-        };
-
-        /**
-         * standard card details
-         */
-        var source = "${viewObj.response.source}";
-
-        // mount card when source is not available
-        if (source == ""){
-            var cardElement = elements.create('card', {hidePostalCode:true, style:style});
-            cardElement.mount('#card-element');
-        }
-
-
-        /**
-         * customised card details
-         */
-        /*
-        var cardNumber = elements.create('cardNumber', {placeholder:'123123123'});
-        cardNumber.mount('#card-number');
-        var cardExpire = elements.create('cardExpiry');
-        cardExpire.mount('#card-expire');
-        var cardCvc = elements.create('cardCvc');
-        cardCvc.mount('#card-cvc');
-        */
-
-        $('#card-button').on('click', function(){
-
-            // disable button
-            $('#card-button').append("<i class=\"fa fa-spinner fa-spin card-btn-spinner\"></i>");
-            $('#card-button').prop('disabled', true);
-
-
-            var cardholderName = $('#cardholder-name').val();
-            var saveToCustomer = $('#saveToCustomer').prop('checked');
-
-            if (source == ""){
-                stripe.handleCardPayment(
-                    clientSecret, cardElement, {
-                        source_data: {
-                            owner: { name: cardholderName }
-                        },
-                        save_payment_method : saveToCustomer
-                    }
-                ).then(function (result) {
-                    handleResult(result);
-                });
-            } else {
-                stripe.handleCardPayment(
-                    clientSecret, {
-                        source : source
-                    }
-                ).then(function (result) {
-                    handleResult(result);
-                });
-            }
-
-        });
-
-        $('#source-button').on('click', function(){
-            stripe.createSource(cardElement, {
-                type: 'card',
-                owner: {
-                    name: 'John Smith',
-                }
-            }).then(function(result) {
-                console.log(result.source);
-                $('.source-id-value').html(result.source.id);
+            var stripe = Stripe(publishKey, {
+                betas: ['payment_intent_beta_3']
             });
 
-        });
+            var elements = stripe.elements();
 
-        // retrieve payment intent details
-        $('.pi-id').on('click', function()
-        {
-            retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
-        });
-    };
+            var style = {
+                base: {
+                    color: '#424770',
+                    fontSize: '14px',
+                    '::placeholder': {
+                        color: '#ccc',
+                    },
+                    fontSmoothing: 'antialiased',
+                },
+                invalid: {
+                    color: '#e5424d',
+                    ':focus': {
+                        color: '#303238',
+                    },
+                },
+            };
 
-    function handleResult(result){
-        // keep card form on the left
-        var hasResponse = $('.pi-response:visible').length;
-        if (hasResponse===0){
-            $('.card-form').toggleClass('col-md-offset-2', 500);
+            /**
+             * standard card details
+             */
+            var source = "${viewObj.response.source}";
+
+            // mount card when source is not available
+            if (source == ""){
+                var cardElement = elements.create('card', {hidePostalCode:true, style:style});
+                cardElement.mount('#card-element');
+            }
+
+
+            /**
+             * customised card details
+             */
+            /*
+            var cardNumber = elements.create('cardNumber', {placeholder:'123123123'});
+            cardNumber.mount('#card-number');
+            var cardExpire = elements.create('cardExpiry');
+            cardExpire.mount('#card-expire');
+            var cardCvc = elements.create('cardCvc');
+            cardCvc.mount('#card-cvc');
+            */
+
+            $('#card-button').on('click', function(){
+
+                // disable button
+                $('#card-button').append("<i class=\"fa fa-spinner fa-spin card-btn-spinner\"></i>");
+                $('#card-button').prop('disabled', true);
+
+
+                var cardholderName = $('#cardholder-name').val();
+                var saveToCustomer = $('#saveToCustomer').prop('checked');
+                var sourceId = $("input[name='card']:checked").val();
+                console.log(sourceId);
+
+                if (source != ""){
+                    stripe.handleCardPayment(
+                        clientSecret, {
+                            source : source
+                        }
+                    ).then(function (result) {
+                        handleResult(result);
+                    });
+                } else if (typeof sourceId != 'undefined' && sourceId != ""){
+                    stripe.handleCardPayment(
+                        clientSecret, {
+                            source : sourceId
+                        }
+                    ).then(function (result) {
+                        handleResult(result);
+                    });
+                } else {
+                    stripe.handleCardPayment(
+                        clientSecret, cardElement, {
+                            payment_method_data: {
+                                billing_details: {
+                                    name: 'Jenny Rosen',
+                                    address: {
+                                      line1: '123 High Street',
+                                      city: 'London',
+                                      postal_code: 'N1 1AB',
+                                      country: 'GB'
+                                    },
+                                }
+                            },
+                            save_payment_method : saveToCustomer
+                        }
+                    ).then(function (result) {
+                        handleResult(result);
+                    });
+                };
+
+            });
+
+            $('#source-button').on('click', function(){
+                stripe.createSource(cardElement, {
+                    type: 'card',
+                    owner: {
+                        name: 'John Smith',
+                    }
+                }).then(function(result) {
+                    console.log(result.source);
+                    $('.source-id-value').html(result.source.id);
+                });
+
+            });
+
+            // retrieve payment intent details
+            $('.pi-id').on('click', function()
+            {
+                retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${viewObj.currentAccount.accountSecretKey}");
+            });
         }
+        function handleResult(result){
+            // keep card form on the left
+            var hasResponse = $('.pi-response:visible').length;
+            if (hasResponse===0){
+                $('.card-form').toggleClass('col-md-offset-2', 500);
+            }
 
-        // remove pi-response-log
-        $('.pi-response').find('.alert').remove();
+            // remove pi-response-log
+            $('.pi-response').find('.alert').remove();
 
-        if (result.error) {
-            // Display error.message in your UI.
-            $('.pi-response').append("<div class=\"alert alert-danger\"><i class=\"fa fa-times-circle\"></i> Error!</div>");
-            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>")
-            $('.pi-response-log').text(JSON.stringify(result.error, null, 3));
-            $('.pi-response').show(500);
-            $('#card-button').find('.card-btn-spinner').remove();
-            $('#card-button').prop('disabled', false);
-        } else {
-            $('.pi-response').append("<div class=\"alert alert-success\"><i class=\"fa fa-check-circle\"></i> PaymentIntent completed!</div>");
-            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>");
-            $('.pi-response-log').text(JSON.stringify(result.paymentIntent, null, 3));
-            $('.pi-response').show(500);
-            $('#card-button').find('.card-btn-spinner').remove();
-            //$('#card-button').prop('disabled', false);
-            $('.pi-retrieve').show();
+            if (result.error) {
+                // Display error.message in your UI.
+                $('.pi-response').append("<div class=\"alert alert-danger\"><i class=\"fa fa-times-circle\"></i> Error!</div>");
+                $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>");
+                $('.pi-response-log').text(JSON.stringify(result.error, null, 3));
+                $('.pi-response').show(500);
+                $('#card-button').find('.card-btn-spinner').remove();
+                $('#card-button').prop('disabled', false);
+            } else {
+                $('.pi-response').append("<div class=\"alert alert-success\"><i class=\"fa fa-check-circle\"></i> PaymentIntent completed!</div>");
+                $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>");
+                $('.pi-response-log').text(JSON.stringify(result.paymentIntent, null, 3));
+                $('.pi-response').show(500);
+                $('#card-button').find('.card-btn-spinner').remove();
+                $("input[name='card']").prop('disabled', true);
+                //$('#card-button').prop('disabled', false);
+                $('.pi-retrieve').show();
+            }
         }
-    };
+    });
 </script>
 
 

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class SubscriptionReq {
 
+    private String id;
     private String customer;
     private String application_fee_percent;
     private String billing;
@@ -20,11 +21,21 @@ public class SubscriptionReq {
     private String days_until_due;
     private List<Item> items;
     private Boolean prorate;
+    private Long proration_date;
     private String tax_percent;
     private String trial_period_days;
     private Boolean trial_from_plan;
+    private Long trial_end;
 
     public SubscriptionReq() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCustomer() {
@@ -99,6 +110,14 @@ public class SubscriptionReq {
         this.prorate = prorate;
     }
 
+    public Long getProration_date() {
+        return proration_date;
+    }
+
+    public void setProration_date(Long proration_date) {
+        this.proration_date = proration_date;
+    }
+
     public String getTax_percent() {
         return tax_percent;
     }
@@ -124,15 +143,18 @@ public class SubscriptionReq {
     }
 
     public static class Item {
+        String id;
         String plan;
         String quantity;
+        Boolean deleted;
+        Boolean clear_usage;
 
-        public Item() {
+        public String getId() {
+            return id;
         }
 
-        public Item(String plan, String quantity) {
-            this.plan = plan;
-            this.quantity = quantity;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getPlan() {
@@ -150,6 +172,30 @@ public class SubscriptionReq {
         public void setQuantity(String quantity) {
             this.quantity = quantity;
         }
+
+        public Boolean getDeleted() {
+            return deleted;
+        }
+
+        public void setDeleted(Boolean deleted) {
+            this.deleted = deleted;
+        }
+
+        public Boolean getClear_usage() {
+            return clear_usage;
+        }
+
+        public void setClear_usage(Boolean clear_usage) {
+            this.clear_usage = clear_usage;
+        }
+    }
+
+    public Long getTrial_end() {
+        return trial_end;
+    }
+
+    public void setTrial_end(Long trial_end) {
+        this.trial_end = trial_end;
     }
 
     /**

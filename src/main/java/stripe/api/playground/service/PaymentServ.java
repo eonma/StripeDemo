@@ -2,6 +2,7 @@ package stripe.api.playground.service;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import org.apache.log4j.Logger;
 import stripe.api.playground.model.PaymentIntentReq;
@@ -27,7 +28,7 @@ public class PaymentServ {
     public PaymentServ(String apiKey) {
         this.apiKey = apiKey;
         Stripe.apiKey = apiKey;
-        Stripe.apiVersion = "2019-02-19";
+        //Stripe.apiVersion = "2019-02-19";
     }
 
     /**
@@ -78,7 +79,7 @@ public class PaymentServ {
                     params.put("metadata", metadataMap);
                 }
             }
-            // process shipping Map and address map
+           /* // process shipping Map and address map
             else if ("shipping".equals(entry.getKey())){
                 Map<String, Object> shippingMap = (Map<String, Object>) entry.getValue();
                 // remove empty keys from shipping map
@@ -97,7 +98,7 @@ public class PaymentServ {
                 if (tdMap.get("destination") != null && !"".equals(tdMap.get("destination"))){
                     params.put("transfer_data", tdMap);
                 }
-            }
+            }*/
             // all other parameters
             else {
                 params.put(entry.getKey(), entry.getValue());
@@ -117,6 +118,20 @@ public class PaymentServ {
         PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
         return paymentIntent;
     }
+
+    public Customer retrieveCustomer(String id) throws StripeException {
+        Customer customer = Customer.retrieve(id);
+
+        return customer;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 }

@@ -352,7 +352,7 @@
                 </form:form>
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn-primary-stripe-slate btn-toggle-create" id="create-plan-btn"><i class="fa fa-plus"></i>New plan</button>
+                        <button class="btn btn-primary-stripe-green btn-toggle-create" id="create-plan-btn"><i class="fa fa-plus"></i>New plan</button>
                     </div>
                 </div>
             </div>

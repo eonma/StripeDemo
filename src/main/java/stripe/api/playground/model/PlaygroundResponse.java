@@ -1,6 +1,7 @@
 package stripe.api.playground.model;
 
 import stripe.api.playground.util.JSONFormatter;
+import stripe.api.playground.util.ResponseCode;
 
 /**
  * User: chenma
@@ -11,6 +12,10 @@ public class PlaygroundResponse {
 
     private Boolean error;
     private Object body;
+
+    private ResponseCode code;
+    private ResponseAction action;
+    private Object apiResponse;
 
     public Boolean getError() {
         return error;
@@ -26,6 +31,30 @@ public class PlaygroundResponse {
 
     public void setBody(Object body) {
         this.body = body;
+    }
+
+    public ResponseCode getCode() {
+        return code;
+    }
+
+    public void setCode(ResponseCode code) {
+        this.code = code;
+    }
+
+    public ResponseAction getAction() {
+        return action;
+    }
+
+    public void setAction(ResponseAction action) {
+        this.action = action;
+    }
+
+    public Object getApiResponse() {
+        return apiResponse;
+    }
+
+    public void setApiResponse(Object apiResponse) {
+        this.apiResponse = apiResponse;
     }
 
     /**

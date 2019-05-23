@@ -1202,7 +1202,7 @@
                     "mx": "2584",
                     "de": "1986",
                     "br": "1921",
-                }
+                };
                 $('#map-email-opens').vectorMap(
                     {
                         map: 'world_en',

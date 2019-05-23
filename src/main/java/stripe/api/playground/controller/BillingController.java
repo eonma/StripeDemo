@@ -33,17 +33,6 @@ public class BillingController {
     private static final Logger logger = Logger.getLogger(BillingController.class);
 
 
-    private AccountProperties getAccountPropertiesFromName(String accountName){
-        AccountProperties accountProperties = StripeDemoUtil.getAccountPropertiesFromName(accountName);
-
-        return accountProperties;
-    }
-    private String getAccountSecretKeyFromName(String accountName){
-
-        String secretKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
-        return secretKey;
-    }
-
     private void getProductsFromAccount(String accountName, Model model, Boolean isNew) {
 
         model.addAttribute("isNew", false);
@@ -52,12 +41,12 @@ public class BillingController {
         }
 
         if (StripeDemoUtil.isNotEmpty(accountName)){
-            String apiKey = getAccountSecretKeyFromName(accountName);
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
             if (StripeDemoUtil.isNotEmpty(apiKey)){
                 BillingServ billingServ = new BillingServ(apiKey);
                 List<Product> products = null;
                 try {
-                    products = billingServ.getProducts(getConditions(isNew));
+                    products = billingServ.getProducts(StripeDemoUtil.getConditions(isNew));
                 } catch (StripeException e) {
                     logger.error(e.getMessage());
                     model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Get Product", e.getMessage(), "getProductsFromAccount", e.getCode()));
@@ -72,7 +61,7 @@ public class BillingController {
         }
 
         if (StripeDemoUtil.isNotEmpty(accountName)){
-            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+            model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountName));
         }
     }
 
@@ -82,12 +71,12 @@ public class BillingController {
             model.addAttribute("isNew", true);
         }
         if (StripeDemoUtil.isNotEmpty(accountName)){
-            String apiKey = getAccountSecretKeyFromName(accountName);
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
             if (StripeDemoUtil.isNotEmpty(apiKey)){
                 BillingServ billingServ = new BillingServ(apiKey);
                 List<Plan> plans = null;
                 try {
-                    plans = billingServ.getPlans(getConditions(isNew));
+                    plans = billingServ.getPlans(StripeDemoUtil.getConditions(isNew));
                 } catch (StripeException e) {
                     logger.error(e.getMessage());
                     model.addAttribute("error", new StripeDemoError(e.getRequestId(), "Get Plan", e.getMessage(), "getPlansFromAccount", e.getCode()));
@@ -102,7 +91,7 @@ public class BillingController {
         }
 
         if (StripeDemoUtil.isNotEmpty(accountName)){
-            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+            model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountName));
         }
 
     }
@@ -150,7 +139,7 @@ public class BillingController {
 
         // switching accounts
         if (StripeDemoUtil.isNotEmpty(accountName)){
-            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+            model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountName));
 
             getProductsFromAccount(accountName, model, Boolean.valueOf(isNew));
 
@@ -160,8 +149,8 @@ public class BillingController {
         // create a new product
         else if ("true".equalsIgnoreCase(createNewProduct)) {
             if (StripeDemoUtil.isNotEmpty(accountForNewProd)){
-                model.addAttribute("account", getAccountPropertiesFromName(accountForNewProd));
-                String apiKey = getAccountSecretKeyFromName(accountForNewProd);
+                model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountForNewProd));
+                String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountForNewProd);
                 if (StripeDemoUtil.isNotEmpty(apiKey)){
                     BillingServ billingServ = new BillingServ(apiKey);
                     Map<String, Object> prodReq = new HashMap<>();
@@ -234,7 +223,7 @@ public class BillingController {
         // switching accounts
         if (StripeDemoUtil.isNotEmpty(accountName)){
 
-            model.addAttribute("account", getAccountPropertiesFromName(accountName));
+            model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountName));
             //logger.info(accountName);
             getPlansFromAccount(accountName, model, Boolean.valueOf(isNew));
             model.addAttribute("prd", new Product());
@@ -243,8 +232,8 @@ public class BillingController {
         else if ("true".equalsIgnoreCase(createNewPlan)) {
             if (StripeDemoUtil.isNotEmpty(accountForNewProd)) {
 
-                model.addAttribute("account", getAccountPropertiesFromName(accountForNewProd));
-                String apiKey = getAccountSecretKeyFromName(accountForNewProd);
+                model.addAttribute("account", StripeDemoUtil.getAccountPropertiesFromName(accountForNewProd));
+                String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountForNewProd);
                 if (StripeDemoUtil.isNotEmpty(apiKey)) {
                     BillingServ billingServ = new BillingServ(apiKey);
                     try {
@@ -271,39 +260,16 @@ public class BillingController {
         return Constants.LIST_PLAN_VIEW;
     }
 
-    /**
-     * list all subscriptions
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "list-subscription", method = RequestMethod.GET)
-    public String ShowAllSubscriptions(@RequestParam(value="isNew", required=false) Boolean isNew, Model model){
-
-
-        Map<String, Object> conditions = new HashMap<>();
-        try {
-            conditions = getConditions(isNew);
-            SubscriptionCollection subCollection = Subscription.list(conditions);
-            List<Subscription> subs = subCollection.getData();
-            model.addAttribute("subs", subs);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (StripeException e) {
-            e.printStackTrace();
-        }
-
-        model.addAttribute("subReq", new SubscriptionReq());
-
-        return Constants.LIST_SUB_VIEW;
-    }
 
     /**
-     * Show all subscriptions
+     * Show subscription view
      * @param model
      * @return
      */
     @RequestMapping(value = "subscription", method = RequestMethod.GET)
-    public String ShowSubscriptions(Model model){
+    public String ShowSubscriptions(
+            @RequestParam(value="acct", required=false) String accountName,
+            Model model){
 
         // init viewobj
         ViewObject viewObject = new ViewObject(
@@ -315,6 +281,10 @@ public class BillingController {
                 null
         );
 
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            viewObject.setCurrentAccount(StripeDemoUtil.getAccountPropertiesFromName(accountName));
+        }
+
         model.addAttribute("viewObj", viewObject);
         model.addAttribute("subReq", new SubscriptionReq());
 
@@ -323,7 +293,7 @@ public class BillingController {
 
 
     /**
-     * Create a new product
+     * Create a new subscription
      * @param subReq
      * @param result
      * @param model
@@ -365,22 +335,165 @@ public class BillingController {
         return ResponseEntity.ok().body(response.toJSON());
     }
 
-    private Map<String, Object> getConditions(Boolean isNew) throws ParseException {
+    /**
+     * list all subscriptions
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "list-subscription", method = RequestMethod.GET)
+    public String showAllSubscriptionsView(
+            @RequestParam(value="isNew", required=false) Boolean isNew,
+            @RequestParam(value="acct", required=false) String accountName,
+            Model model){
 
-        Map<String, Object> conditions = new HashMap<>();
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                null,
+                StripeDemoUtil.getAccountPropertyCollections(),
+                false,
+                null,
+                false,
+                null
+        );
 
-        if (isNew != null && isNew){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date dateWithoutTime = sdf.parse(sdf.format(new Date()));
-            long today = dateWithoutTime.toInstant().toEpochMilli()/1000;
-            Map<String, Object> created = new HashMap<>();
-            created.put("gte", today);
-            conditions.put("created", created);
+        if (StripeDemoUtil.isNotEmpty(accountName)){
+            List<Subscription> subs = getSubsFromAccountName(accountName, isNew);
+            model.addAttribute("subs", subs);
+            viewObject.setResponse(subs);
+            viewObject.setCurrentAccount(StripeDemoUtil.getAccountPropertiesFromName(accountName));
         }
 
-        conditions.put("limit", 100);
+        model.addAttribute("viewObj", viewObject);
+        model.addAttribute("stripeAccount", new StripeAccount());
+        model.addAttribute("subReq", new SubscriptionReq());
 
-        return conditions;
+        String accountCollections = StripeDemoUtil.getAccountPropertyCollections().toJSON().replaceAll("\n", "");
+        model.addAttribute("accountCollections", accountCollections);
 
+        return Constants.LIST_SUB_VIEW;
     }
+
+    @RequestMapping(value = "/list-subscription", method = RequestMethod.POST)
+    public String showAllSubscriptions (
+            @RequestParam(value="isNew", required=false) Boolean isNew,
+            @ModelAttribute("accountName") String accountName,
+            BindingResult result, Model model){
+
+        // init viewobj
+        ViewObject viewObject = new ViewObject(
+                StripeDemoUtil.getAccountPropertiesFromName(accountName),
+                StripeDemoUtil.getAccountPropertyCollections(),
+                true,
+                null,
+                false,
+                null
+        );
+
+        model.addAttribute("viewObj", viewObject);
+        model.addAttribute("stripeAccount", new StripeAccount());
+
+        List<Subscription> subs = getSubsFromAccountName(accountName, isNew);
+        model.addAttribute("subs", subs);
+        viewObject.setResponse(subs);
+
+
+        return Constants.LIST_SUB_VIEW;
+    }
+
+/*
+
+    */
+/**
+     * Update a subscription
+     * @param model
+     * @return
+     *//*
+
+    @RequestMapping(value = "subscription/{subId}", method = RequestMethod.GET)
+    public String showUpdateSubView(
+            @RequestParam(value="isNew", required=false) Boolean isNew,
+            @RequestParam(value="acct", required=false) String accountName,
+            @PathVariable(value="subId") String subId,
+            Model model){
+
+        if (StripeDemoUtil.isNotEmpty(accountName) && StripeDemoUtil.isNotEmpty(subId)){
+
+            try {
+                String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+                BillingServ billingServ = new BillingServ(apiKey);
+                Subscription subscription = billingServ.getSub(subId);
+                model.addAttribute("sub", subscription);
+            } catch (StripeException e) {
+                e.printStackTrace();
+            }
+        }
+
+        model.addAttribute("subReq", new SubscriptionReq());
+
+
+        return Constants.UPDATE_SUB_VIEW;
+    }
+*/
+
+    /**
+     * Update a subscription
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "subscription/{subId}", method = RequestMethod.POST)
+    public String showUpdateSubView(
+            @ModelAttribute(value="acct") String accountName,
+            @PathVariable(value="subId") String subId,
+            @ModelAttribute("subReq") SubscriptionReq subReq,
+            Model model){
+
+        if (StripeDemoUtil.isNotEmpty(accountName) && StripeDemoUtil.isNotEmpty(subId)){
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+            BillingServ billingServ = new BillingServ(apiKey);
+            try {
+                Subscription subscription = billingServ.getSub(subId);
+                model.addAttribute("sub", subscription);
+            } catch (StripeException e) {
+                e.printStackTrace();
+            }
+        }
+
+        model.addAttribute("subReq", new SubscriptionReq());
+
+
+        return Constants.UPDATE_SUB_VIEW;
+    }
+
+    @RequestMapping(value = "subscription/{subId}/update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> updateSubscription(
+            @ModelAttribute("subReq") SubscriptionReq subReq,
+            @ModelAttribute("acct") String accountName,
+            @PathVariable(value="subId") String subId,
+            BindingResult result, Model model){
+        try {
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+            BillingServ billingServ = new BillingServ(apiKey);
+            Subscription sub = billingServ.updateSub(subReq, subId);
+            model.addAttribute("sub", sub);
+        } catch (StripeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<Subscription> getSubsFromAccountName(String accountName, Boolean isNew){
+        List<Subscription> subs = null;
+        try {
+            String apiKey = StripeDemoUtil.getAccountSecretKeyFromName(accountName);
+            BillingServ billingServ = new BillingServ(apiKey);
+            subs = billingServ.getSubscriptions(StripeDemoUtil.getConditions(isNew));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (StripeException e) {
+            e.printStackTrace();
+        }
+        return subs;
+    }
+
 }

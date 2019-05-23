@@ -127,7 +127,7 @@ public class BillingServ {
         }
 
         Map<String, Object> transformUsage = (Map<String, Object>) planParams.get("transform_usage");
-        if (StripeDemoUtil.isEmpty((String) transformUsage.get("divide_by"))){
+        if (transformUsage == null){
             planParams.remove("transform_usage");
         }
 
@@ -142,13 +142,42 @@ public class BillingServ {
         Iterator<Map<String, Object>> it = itemsList.iterator();
         while (it.hasNext()) {
             Map<String, Object> itemMap = it.next();
-            if ("".equals(itemMap.get("plan")) || itemMap.get("plan") == null){
+            /*if ("".equals(itemMap.get("plan")) || itemMap.get("plan") == null){
                 it.remove();
-            }
+            }*/
+            itemMap = StripeDemoUtil.cleanMap(itemMap);
         }
 
         return subParams;
     }
 
+
+    public List<Subscription> getSubscriptions(Map<String, Object> conditions) throws StripeException {
+
+        if (conditions == null) {
+            conditions = new HashMap<>();
+        }
+
+        SubscriptionCollection subCollection = Subscription.list(conditions);
+        List<Subscription> subs = subCollection.getData();
+
+        return subs;
+
+    }
+
+    public Subscription getSub(String subId) throws StripeException {
+        Subscription sub = Subscription.retrieve(subId);
+        return sub;
+    }
+
+
+    public Subscription updateSub(SubscriptionReq subReq, String subId) throws StripeException {
+        Subscription sub = Subscription.retrieve(subId);
+
+        Map<String, Object> updateParams = getSubReq(subReq);
+        Subscription updatedSub = sub.update(updateParams);
+
+        return updatedSub;
+    }
 
 }

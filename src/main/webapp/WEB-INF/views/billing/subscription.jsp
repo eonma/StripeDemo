@@ -67,7 +67,7 @@
                 <div class="row">
                     <div class="col-md-12 source-panel">
                         <!-- CREATE A SOURCE -->
-                        <div class="panel panel-main sub-client" style="border-top: 2px solid #1ea672">
+                        <div class="panel panel-main sub-client panel-client">
                             <div class="panel-heading">
                                 <span class="client-server stripe-green">CLIENT SIDE</span>
                                 <h3 class="panel-title">Create a source - client side</h3>
@@ -302,9 +302,30 @@
         $('.sub-result').hide();
         $('#client-form').hide();
 
-
         // render Stripe elements when changing account
         var account;
+
+        // preselect account
+        var currentAccount = "${viewObj.currentAccount.accountName}";
+        console.log(currentAccount);
+
+        $('#stripe-account option').each(function () {
+            var name = $(this).val();
+            if (name === currentAccount){
+                $(this).attr("selected", "selected");
+            }
+        });
+
+        if (currentAccount != ""){
+            $('#client-form').show();
+
+            var stripe = Stripe("${viewObj.currentAccount.accountPublishKey}", {
+                betas: ['payment_intent_beta_3']
+            });
+
+            renderStripeElements(stripe, "${viewObj.currentAccount.accountSecretKey}");
+        }
+
         $('#stripe-account').on('change', function () {
             var accountName = $(this).children("option:selected").val();
             $('#account-name').val(accountName);
@@ -321,10 +342,6 @@
                         var stripe = Stripe(result.accountPublishKey, {
                             betas: ['payment_intent_beta_3']
                         });
-
-                        $('#card-element').remove();
-                        // create card-element
-                        $('#stripe-card').append("<div id=\"card-element\"></div>");
                         renderStripeElements(stripe, result.accountSecretKey);
                     }
                 });
@@ -429,6 +446,9 @@
 
     // Render Stripe Elements
     function renderStripeElements(stripe, secretKey){
+        $('#card-element').remove();
+        $('#stripe-card').append("<div id=\"card-element\"></div>");
+
 
         var elements = stripe.elements();
         var cardElement = elements.create('card', {hidePostalCode:true, style:style});
@@ -468,8 +488,7 @@
                 handleResult(result, secretKey);
             });
         });
-    };
-
+    }
     function handleResult(result, accountSecretKey){
         // keep card form on the left
         var hasResponse = $('.pi-response:visible').length;
@@ -483,7 +502,7 @@
         if (result.error) {
             // Display error.message in your UI.
             $('.pi-response').append("<div class=\"alert alert-danger\"><i class=\"fa fa-times-circle\"></i> Error!</div>");
-            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>")
+            $('.pi-response').find('.alert').append("<pre class=\"pi-response-log\"></pre>");
             $('.pi-response-log').text(JSON.stringify(result.error, null, 3));
             $('.pi-response').show(500);
             $('#source-button').find('.card-btn-spinner').remove();
@@ -528,7 +547,7 @@
             })
 
         }
-    };
+    }
 
 
 </script>
