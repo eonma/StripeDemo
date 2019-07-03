@@ -56,8 +56,8 @@ public class AppConfig {
             if (keys != null && keys.length == 2){
                 //accountProperties.setAccountName(key[1]);
                 String[] values = entry.getValue().split(",");
-                if (values != null && values.length == 2){
-                    AccountProperties accountProperties = new AccountProperties(keys[1], values[0], values[1]);
+                if (values != null && values.length == 3){
+                    AccountProperties accountProperties = new AccountProperties(keys[1], values[0], values[1], values[2]);
                     accountPropertiesList.add(accountProperties);
                 }
             }

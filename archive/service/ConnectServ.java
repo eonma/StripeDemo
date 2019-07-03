@@ -7,10 +7,8 @@ import com.stripe.model.Person;
 import org.apache.log4j.Logger;
 import stripe.api.playground.model.AccountReq;
 import stripe.api.playground.model.PersonReq;
-import stripe.api.playground.util.Constants;
 import stripe.api.playground.util.StripeDemoUtil;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**

@@ -46,7 +46,7 @@
 <!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
-    <jsp:include page='../navbar.jsp'/>
+    <jsp:include page='../../src/main/webapp/WEB-INF/views/navbar.jsp'/>
     <!-- END NAVBAR -->
     <!-- MAIN -->
     <div class="main">
@@ -56,12 +56,12 @@
                 <!-- HEADING AND BREADCRUMB -->
                 <div class="content-heading clearfix">
                     <div class="heading-left">
-                        <h1 class="page-title-st">Refund Application Fee</h1>
+                        <h1 class="page-title-st">Products</h1>
                     </div>
                     <ul class="breadcrumb">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li><a href="#">Payments</a></li>
-                        <li class="active">Refund Application Fee</li>
+                        <li><a href="#">Billing</a></li>
+                        <li class="active">Products</li>
                     </ul>
                 </div>
                 <!-- END HEADING AND BREADCRUMB -->
@@ -69,47 +69,129 @@
                     <!-- FEATURED DATATABLE -->
                     <div class="panel panel-main">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Create an Application Fee Refund</h3>
-                            <select id="stripe-account" class="panel-title right" style="position: absolute;left: 70%;">
-                                <option value="" label="Select account"/>
-                                <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
-                                    <option value="${account.accountName}" label="Account - ${account.accountName}"/>
-                                </c:forEach>
-                            </select>
+                            <form:form class="form-horizontal" id="acct-form" method="post" action="product" modelAttribute="stripeAccount">
+                                <h3 class="panel-title">All Products - ${fn:length(products)}</h3>
+                                <span class="client-server stripe-blue" >SERVER SIDE</span>
+                                <form:select path="accountProperties" id="stripe-account" class="panel-title right">
+                                    <form:option value="" label="Select account"/>
+                                    <c:forEach items="${accounts}" var="account">
+                                        <form:option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                    </c:forEach>
+                                </form:select>
+                            </form:form>
                         </div>
                         <div class="panel-body">
-
-                            <form:form class="form-horizontal" id="subForm" modelAttribute="refundReq" action="refund" method="post">
-                                <input type="hidden" id="account-name" name="acct" value="${param.acct}"/>
-                                <div class="project-info">
-                                    <div class="row" >
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="col-sm-5 control-label">id</label>
-                                                <div class="col-sm-7">
-                                                    <form:input path="id" class="form-control" id="id" value="${refundReq.id}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="col-sm-5 control-label">amount</label>
-                                                <div class="col-sm-7">
-                                                    <form:input path="amount" class="form-control" id="amount" value="${refundReq.amount}"/>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="container-fluid" >
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary-stripe-blue btn-toggle-createproduct" style="float: left !important; width: 70%;"><i class="fa fa-plus"></i>New product</button>
                                     </div>
                                 </div>
-                            </form:form>
+                                <br>
+                                <div class="row" style="display: none;">
+                                    <c:forEach items="${products}" var="product">
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="panel project-item">
+                                                <div class="panel-heading">
+                                                    <h2 class="panel-title">${product.id}</h2>
+                                                    <div class="right">
+                                                        <c:choose>
+                                                            <c:when test="${product.active}">
+                                                                <span class="label label-success" style="padding: 0.4em .6em .3em;">ACTIVE</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="label label-danger" style="padding: 0.4em .6em .3em;">INACTIVE</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="left">
+                                                        <div class="info">
+                                                            <span class="title">NAME</span>
+                                                            <span class="value">${product.name}</span>
+                                                        </div>
 
-                            <div class="row">
-                                <div class="col-sm-3 col-sm-offset-9">
-                                    <button id="refund-btn" class="btn btn-primary-stripe-blue" style="width: 100%"><span>Create a Refund</span></button>
+                                                        <div class="info">
+                                                            <span class="title">STATEMENT_DESCRIPTOR</span>
+                                                            <span class="value">${product.statementDescriptor}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right">
+                                                        <div class="info">
+                                                            <span class="title">TYPE</span>
+                                                            <span class="value">${product.type}</span>
+                                                        </div>
+                                                        <div class="info">
+                                                            <span class="title">CREATED</span>
+                                                            <jsp:useBean id="dateValue" class="java.util.Date"/>
+                                                            <jsp:setProperty name="dateValue" property="time" value="${product.created}"/>
+                                                            <span class="value"><fmt:formatDate value="${dateValue}" pattern="yy-MMM-dd HH:mm:SS"/></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="featured-datatable" class="table table-striped table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>active</th>
+                                            <th>name</th>
+                                            <th>type</th>
+                                            <th>created</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:forEach items="${products}" var="product">
+                                            <tr>
+                                                <td><a href="#" id="${product.id}" class="product-id">${product.id}</a></td>
+                                                <td style="vertical-align: middle;">
+                                                    <c:choose>
+                                                        <c:when test="${product.active}">
+                                                            <span class="label label-success plan-status">ACTIVE</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="label label-danger plan-status">INACTIVE</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+
+                                                </td>
+                                                <td>${product.name}</td>
+                                                <td>${product.type}</td>
+
+                                                <jsp:setProperty name="dateValue" property="time" value="${product.created}"/>
+                                                <td><fmt:formatDate value="${dateValue}" pattern="yy-MM-dd HH:mm:ss"/></td>
+                                                <td>
+                                                    <div class="dropdown" style="float: right;">
+                                                        <a href="#" class="toggle-dropdown" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                        <ul class="dropdown-menu dropdown-menu-right">
+                                                            <li><a href="#" class="delete-product" id="${product.id}"><i class="fa fa-fw fa-trash-o"></i>Delete</a></li>
+                                                            <c:choose>
+                                                                <c:when test="${product.active}">
+                                                                    <li><a href="#" class="deactive-product" id="${product.id}"><i class="fa fa-fw fa-stop-circle-o"></i>Deactive</a></li>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <li><a href="#" class="active-product" id="${product.id}"><i class="fa fa-fw fa-play-circle-o"></i>Active</a></li>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <!-- END FEATURED DATATABLE -->
@@ -121,6 +203,50 @@
             </div>
         </div>
         <!-- END MAIN CONTENT -->
+
+        <!-- RIGHT SIDEBAR -->
+        <jsp:useBean id="now" class="java.util.Date"/>
+
+        <div id="sidebar-right" class="right-sidebar">
+            <div class="sidebar-widget">
+                <h4 class="widget-heading"><i class="fa fa-shopping-basket"></i> CREATE A NEW PRODUCT</h4>
+            </div>
+            <div class="sidebar-widget">
+                <form:form class="form-horizontal" id="prdForm" method="post" action="product" modelAttribute="prd">
+                <div class="row">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label" style="padding-top: 5px;">name</label>
+                            <div class="col-xs-6">
+                                <form:input path="name" cssStyle="height: 25px;" class="form-control" id="name" value="${product.name}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">currency</label>
+                            <div class="col-sm-6">
+                                <form:select path="type" id="type" class="form-control" itemValue="${product.type}" cssStyle="height: 26px;">
+                                    <form:option value="service" label="service"/>
+                                    <form:option value="good" label="good"/>
+                                </form:select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                </form:form>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary-stripe-green btn-toggle-create" id="create-product-btn"><i class="fa fa-plus"></i>New product</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- END RIGHT SIDEBAR -->
     </div>
     <!-- END MAIN -->
 </div>
@@ -143,9 +269,8 @@
     $(function()
     {
         // toggle nav active
-        $('#navPayment').toggleClass('active');
-        $('#navRefund').toggleClass('active');
-        $('#navRefAppFee').toggleClass('active');
+        $('#navBilling').toggleClass('active');
+        $('#navProduct').toggleClass('active');
 
 
         // Show error message

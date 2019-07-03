@@ -6,7 +6,6 @@ import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import org.apache.log4j.Logger;
 import stripe.api.playground.model.PaymentIntentReq;
-import stripe.api.playground.util.Constants;
 import stripe.api.playground.util.StripeDemoUtil;
 
 import java.util.*;

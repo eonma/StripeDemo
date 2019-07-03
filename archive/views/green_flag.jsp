@@ -452,7 +452,7 @@
                                         </div>
 
                                         <img src="/resources/site/payment-cards.jpg" class="cards-accepted" width="177"
-                                         alt="We accept Mastercard, Visa, AMEX, Maestro">
+                                             alt="We accept Mastercard, Visa, AMEX, Maestro">
                                 </div>
                             </div>
 

@@ -14,6 +14,7 @@ public class PlaygroundResponse {
     private Object body;
 
     private ResponseCode code;
+    private String status;
     private ResponseAction action;
     private Object apiResponse;
 
@@ -39,6 +40,14 @@ public class PlaygroundResponse {
 
     public void setCode(ResponseCode code) {
         this.code = code;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public ResponseAction getAction() {

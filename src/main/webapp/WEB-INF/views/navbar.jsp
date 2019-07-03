@@ -42,12 +42,19 @@
                     <a href="#" data-toggle="dropdown" id="navPayment"><i><img style="width: 16px;" src="<c:url value="/resources/img/payment_grey.svg"/>"></i> <span>Payments</span> <i class="ti-angle-down icon-submenu"></i></a>
                     <ul class="dropdown-menu">
                         <li class="dropdown dropdown-sub">
+                            <a data-toggle="dropdown" id="navSI"> SetupIntent  <i class="icon-submenu ti-angle-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/setup-intent" id="navCreateSI"> Create a SetupIntent </a></li>
+                                <li><a href="/confirm-setup-intent" id="navConfirmSI"> Confirm SetupIntent </a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown dropdown-sub">
                             <a data-toggle="dropdown" id="navPi"> PaymentIntent <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/paymentintent" id="navCreatePi"> Create a PaymentIntent - auto </a></li>
-                                <li><a href="/payment_intent_manual" id="navCreatePiManual"> Create a PaymentIntent - manual </a></li>
-                                <li><a href="/confirm-paymentintent" id="navConfirmPi"> Confirm a PaymentIntent </a></li>
-                                <li><a href="/capture-paymentintent" id="navCapturePi"> Capture a PaymentIntent </a></li>
+                                <li><a href="/payment-intent-auto" id="navCreatePiAuto"> Create a PaymentIntent - auto </a></li>
+                                <li><a href="/payment-intent-manual" id="navCreatePiManual"> Create a PaymentIntent - manual </a></li>
+                                <li><a href="/confirm-payment-intent" id="navConfirmPi"> Confirm a PaymentIntent </a></li>
+                                <li><a href="/capture-payment-intent" id="navCapturePi"> Capture a PaymentIntent </a></li>
                             </ul>
                         </li>
                         <li class="dropdown dropdown-sub">
@@ -67,7 +74,9 @@
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" id="navBilling"> <img style="width: 16px;" src="<c:url value="/resources/img/billing_grey.svg"/>"></i> <span>Billing</span> <i class="ti-angle-down icon-submenu"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/product" id="navProduct" > Products </a></li>
+                        <li><a href="/product-plan" id="navProductPlan" > Product - Plan </a></li>
+                        <li><a href="/create-sub" id="navCreateSub" > Create Subscription </a></li>
+                        <%--<li><a href="/product" id="navProduct" > Products </a></li>
                         <li><a href="/plan" id="navPlan" > Plans </a></li>
                         <li class="dropdown dropdown-sub">
                             <a href="/subscription" data-toggle="dropdown" id="navSub" > Subscriptions <i class="icon-submenu ti-angle-right"></i></a>
@@ -76,8 +85,8 @@
                                 <li><a href="/list-subscription" id="navSubList"> List all Subscriptions </a></li>
                                 <li><a href="/update-subscription" id="navSubUpdate"> Update a Subscription </a></li>
                             </ul>
-                        </li>
-                        <li><a href="/coupon" id="navCoupon" > Coupons </a></li>
+                        </li>--%>
+                        <%--<li><a href="/coupon" id="navCoupon" > Coupons </a></li>--%>
                         <li class="dropdown dropdown-sub">
                             <a href="#" data-toggle="dropdown" id="navInvoice" > Invoices <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
@@ -92,29 +101,27 @@
                         <li class="dropdown dropdown-sub">
                             <a href="#" data-toggle="dropdown" id="navConnectAccount"> Accounts <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/account" id="navCreateAccount"> Create an Account </a></li>
-                                <li><a href="/update-account" id="navUpdateAccount"> Update an Account </a></li>
+                                <li><a href="/connect-account" id="navCreateAccount"> Create an Account </a></li>
                                 <li><a href="/create-person" id="navCreatePerson"> Create a Person </a></li>
-                                <li><a href="/update-person" id="navUpdatePerson"> Update a Person </a></li>
                             </ul>
                         </li>
-                        <li class="dropdown dropdown-sub">
+                        <%--<li class="dropdown dropdown-sub">
                             <a href="#" data-toggle="dropdown" id="navConnectPayment"> Payment <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#" id="navConnectPI"> Create a PaymentIntent </a></li>
                                 <li><a href="#" id="navConnectTrans"> Create a Transfer </a></li>
                             </ul>
-                        </li>
-                        <li class="dropdown dropdown-sub">
+                        </li>--%>
+                        <%--<li class="dropdown dropdown-sub">
                             <a href="#" data-toggle="dropdown" id="navConnectRefund"> Refund <i class="icon-submenu ti-angle-right"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="/connect-refund" id="navConnectPaymentRefund"> Create a Payment Refund </a></li>
                                 <li><a href="/reverse-transfer" id="navConnectReverseTrans"> Reverse a Transfer </a></li>
                             </ul>
-                        </li>
+                        </li>--%>
                         <li><a href="/balance" id="navBalance" > Retrieve Balance </a></li>
                         <li><a href="/payout" id="navPayout" > Create a Payout </a></li>
-                        <li><a href="/topup" id="navTopup" > Create a Topup </a></li>
+                        <%--<li><a href="/topup" id="navTopup" > Create a Topup </a></li>--%>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -133,20 +140,29 @@
             </ul>
 
 
-            <%--<ul class="nav navbar-nav navbar-right">
-                <li class="hidden-xs hidden-sm">
+            <ul class="nav navbar-nav navbar-right">
+                <%--<li class="hidden-xs hidden-sm">
                     <a href="add-account" class="btn-toggle-addaccount" id="addAccount">
                         <span> &nbsp; </span><i class="ti-settings"></i>
                     </a>
+                </li>--%>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <%--<img id="user-img" src="<c:url value="/resources/img/user2.png"/>" alt="">--%>
+                        <img id="user-img" src="https://lh3.googleusercontent.com/-a4oA3xYEsyo/AAAAAAAAAAI/AAAAAAAAAAc/CuQgft9-vRo/s96-c/photo.jpg" alt="">
+                        <i class="ti-angle-down icon-submenu"></i>
+                    </a>
+                    <ul class="dropdown-menu logged-user-menu">
+                        <li><a href="login"><i class="ti-user"></i> <span>Login</span></a></li>
+                        <%--<li><a href="#" data-onsuccess="onSuccess" class="g-signin2" data-width=""><i class="ti-user"></i> <span>Login</span></a></li>--%>
+                        <%--<li><div id="my-signin2"></div></li>--%>
+                        <li><a href="add-account"><i class="ti-settings"></i> <span>Add account</span></a></li>
+                        <li><a onclick="signOut();" style="cursor: pointer;"><i class="ti-power-off"></i> <span>Logout</span></a></li>
+                    </ul>
                 </li>
-            </ul>--%>
+            </ul>
         </div>
     </div>
     <!-- end main navigation -->
-
-
     <!-- mobile nav -->
-
-
-
 </nav>

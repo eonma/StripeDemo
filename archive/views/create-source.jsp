@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: chenma
-  Date: 2019-01-02
-  Time: 15:10
+  Date: 2019-01-16
+  Time: 09:14
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -27,7 +27,6 @@
     <link rel="stylesheet" href="<c:url value="/resources/vendor/themify-icons/css/themify-icons.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/pace/themes/orange/pace-theme-minimal.css"/>">
     <link rel="stylesheet" href="<c:url value="/resources/vendor/toastr/toastr.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/resources/vendor/sweetalert2/sweetalert2.css"/>">
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="<c:url value="/resources/css/main.css"/>">
@@ -44,7 +43,7 @@
 <!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
-    <jsp:include page='../navbar.jsp'/>
+    <jsp:include page='../../src/main/webapp/WEB-INF/views/navbar.jsp'/>
     <!-- END NAVBAR -->
     <!-- MAIN -->
     <div class="main">
@@ -54,36 +53,64 @@
                 <!-- HEADING AND BREADCRUMB -->
                 <div class="content-heading clearfix">
                     <div class="heading-left">
-                        <h1 class="page-title-st">PaymentIntent</h1>
+                        <h1 class="page-title-st">Source</h1>
                     </div>
                     <ul class="breadcrumb">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li><a href="#">Payments</a></li>
-                        <li class="active">PaymentIntent</li>
+                        <li><a href="#">Source</a></li>
+                        <li class="active">Create a source</li>
                     </ul>
                 </div>
                 <!-- END HEADING AND BREADCRUMB -->
+
+                <div class="row">
+                    <div class="panel source-client">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Create a source - client side</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-6 card-form">
+                                <div class="form-horizontal">
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Card details</label>
+                                        <div class="col-sm-8">
+                                            <div id="card-element"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Create a PaymentIntent-->
+                                    <div class="form-group">
+                                        <div class="col-sm-8 col-sm-offset-4">
+                                            <button id="card-button" class="btn btn-primary-stripe-blue" data-secret="${pi.clientSecret}" style="width: 100%"><span>Complete Payment</span></button>
+                                        </div>
+                                    </div>
+                                    <!-- Retrieve a PaymentIntent-->
+                                    <div class="form-group pi-retrieve" style="display: none;">
+                                        <div class="col-sm-8 col-sm-offset-4">
+                                            <button class="btn btn-primary-stripe-blue pi-retrieve-btn" style="width: 100%"><span>Retrieve ${pi.id}</span></button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 pi-response">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <!-- REQUEST PANEL -->
-                    <div class="panel panel-main panel-tab">
+                    <div class="panel panel-tab">
                         <div class="panel-heading">
-
-                            <span class="client-server stripe-blue">SERVER SIDE</span>
-                            <h3 class="panel-title">Create a PaymentIntent - server side</h3>
-
-                            <select id="stripe-account" class="panel-title right" style="position: absolute;left: 70%;">
-                                <option value="" label="Select account"/>
-                                <c:forEach items="${accounts}" var="account">
-                                    <option value="${account.accountName}" label="Account - ${account.accountName}"/>
-                                </c:forEach>
-                            </select>
-
+                            <h3 class="panel-title">Create a source - client side</h3>
                             <ul class="nav nav-tabs pull-right">
                                 <li id="tabReq" class="active"><a href="#reqTab" data-toggle="tab"></i> REQUEST</a></li>
                                 <li id="tabRes"><a href="#resTab" data-toggle="tab"></i> RESPONSE </a></li>
                             </ul>
-
-
                         </div>
                         <div class="panel-body">
                             <div class="tab-content no-padding">
@@ -112,9 +139,9 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="col-sm-6 control-label"><b>payment_method_types</b></label>
+                                                        <label class="col-sm-6 control-label"><b>allowed_source_type</b></label>
                                                         <div class="col-sm-6">
-                                                            <form:select path="payment_method_types" id="paymentMethodTypes" class="form-control" itemValue="${piReq.payment_method_types}">
+                                                            <form:select path="allowed_source_types" id="allowedSourceTypes" class="form-control" itemValue="${piReq.allowed_source_types}">
                                                                 <form:option value="card" label="card"/>
                                                             </form:select>
                                                         </div>
@@ -187,7 +214,7 @@
                                         <!-- OPTIONAL PARAMS -->
                                         <div class="project-info">
                                             <div class="panel-group project-accordion">
-                                                <div class="panel panel-second project-milestone">
+                                                <div class="panel project-milestone">
                                                     <div class="panel-heading">
                                                         <h4 class="panel-title">
                                                             <a href="#collapse1" data-toggle="collapse" data-parent="#accordion" class="collapsed">
@@ -239,9 +266,9 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="form-group">
-                                                                        <label class="col-sm-4 control-label">save_payment_method</label>
+                                                                        <label class="col-sm-4 control-label">save_source_to_customer</label>
                                                                         <div class="col-sm-8">
-                                                                            <form:select path="save_payment_method" id="savePaymentMethod" class="form-control" itemValue="${piReq.save_payment_method}">
+                                                                            <form:select path="save_source_to_customer" id="saveSourceToCustomer" class="form-control" itemValue="${piReq.save_source_to_customer}">
                                                                                 <form:option value="" label="----" />
                                                                                 <form:option value="true" />
                                                                                 <form:option value="false"  />
@@ -290,6 +317,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -302,7 +331,6 @@
                                                 <button type="submit" class="btn btn-primary-stripe-blue">Submit Request</button>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="account-name" name="accountName" value=""/>
                                     </form:form>
                                 </div>
                                 <!-- END RESPONSE TAB -->
@@ -320,97 +348,13 @@
                     <!-- END REQUEST PANEL -->
                 </div>
 
-                <!-- PI CLIENT PANEL -->
-                <c:if test="${pageElement.response && !pageElement.error}">
-                    <div class="row">
-                        <div class="panel panel-main pi-client" id="piClient" style="border-top: 2px solid #1ea672">
-                            <div class="panel-heading">
-                                <span class="client-server stripe-green">CLIENT SIDE</span>
-                                <h3 class="panel-title">PaymentIntent created - "<a href="#" id="${pi.id}" class="pi-id">${pi.id}</a>"</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-md-6 col-md-offset-2 card-form">
-                                    <div class="form-horizontal">
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Name</label>
-                                            <div class="col-sm-8">
-                                                <c:choose>
-                                                    <c:when test="${pi.status == 'requires_confirmation'}">
-                                                        <input class="form-control" id="cardholder-name" type="text" value="John" disabled="disabled"/>
-                                                    </c:when>
-                                                    <c:when test="${pi.status == 'requires_payment_method'}">
-                                                        <input class="form-control" id="cardholder-name" type="text" />
-                                                    </c:when>
-                                                </c:choose>
-                                            </div>
-                                        </div>
-                                        <c:if test="${pi.status == 'requires_confirmation'}">
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">source</label>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" id="pi_source" type="text" value="${pi.source}" disabled="disabled"/>
-                                            </div>
-                                        </div>
-                                        </c:if>
 
-                                        <c:choose>
-                                            <c:when test="${pi.status == 'requires_confirmation'}">
-
-                                            </c:when>
-                                            <c:when test="${pi.status == 'requires_payment_method'}">
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Card details</label>
-                                                    <div class="col-sm-8">
-                                                        <div id="card-element"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-4 control-label"></label>
-                                                    <div class="col-sm-8">
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" id="saveToCustomer"/> Save payment method
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:when>
-                                        </c:choose>
-
-                                        <!-- Create a PaymentIntent-->
-                                        <div class="form-group">
-                                            <div class="col-sm-8 col-sm-offset-4">
-                                                <button id="card-button" class="btn btn-primary-stripe-blue" data-secret="${pi.clientSecret}" style="width: 100%"><span>Complete Payment</span></button>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-8 col-sm-offset-4">
-                                                <button id="source-button" class="btn btn-primary-stripe-blue" style="width: 100%"><span>Create a Source</span></button>
-                                                <div class="source-id-value"></div>
-                                            </div>
-                                        </div>
-                                        <!-- Retrieve a PaymentIntent-->
-                                        <div class="form-group pi-retrieve" style="display: none;">
-                                            <div class="col-sm-8 col-sm-offset-4">
-                                                <button class="btn btn-primary-stripe-blue pi-retrieve-btn" style="width: 100%"><span>Retrieve ${pi.id}</span></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pi-response">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </c:if>
-                <!-- END PI CLIENT PANEL -->
 
                 <!-- PI DETAILS PANEL -->
 
                 <div class="row retrieve-pi-row" style="display: none;">
-                    <div class="panel panel-main pi-details" id="piDetails" style="border-top: 2px solid #556cd6">
+                    <div class="panel pi-details" id="piDetails">
                         <div class="panel-heading">
-                            <span class="client-server stripe-blue">SERVER SIDE</span>
                             <h3 class="panel-title">Retrieve PaymentIntent - "${pi.id}" at server side</h3>
                         </div>
                         <div class="panel-body">
@@ -422,6 +366,10 @@
             </div>
         </div>
         <!-- END MAIN CONTENT -->
+
+        <!-- RIGHT SIDEBAR -->
+        <jsp:include page='sidebar.jsp'/>
+        <!-- END RIGHT SIDEBAR -->
     </div>
     <!-- END MAIN -->
 </div>
@@ -432,9 +380,7 @@
 <script src="<c:url value="/resources/vendor/pace/pace.min.js"/>"></script>
 <script src="<c:url value="/resources/vendor/toastr/toastr.min.js"/>"></script>
 <script src="<c:url value="/resources/scripts/klorofilpro-common.js"/>"></script>
-<script src="<c:url value="/resources/scripts/stripe-playground.js"/>"></script>
 <script src="https://js.stripe.com/v3/"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.0.3/dist/sweetalert2.all.min.js"></script>
 <script>
 
     $(function()
@@ -444,20 +390,9 @@
         $('#navPi').toggleClass('active');
         $('#navCreatePi').toggleClass('active');
 
-        // Stripe account list
-        $('#stripe-account').on('change', function () {
-            var accountName = $(this).children("option:selected").val();
-            $('#account-name').val(accountName);
-        });
-
-        // preselect account
-        var accountName = "${account.accountName}";
-        $('#stripe-account option').each(function () {
-            var name = $(this).val();
-            if (name === accountName){
-                $(this).attr("selected", "selected");
-            }
-        });
+        // remove [] from allow_source_type
+        //var allowedSourceType = $('#allowedSourceTypes').val();
+        //$('#allowedSourceTypes').val(allowedSourceType.substr(1, allowedSourceType.length-2));
 
         // accordion toggle collapse
         $('.project-accordion [data-toggle="collapse"]').on('click', function()
@@ -471,34 +406,34 @@
         }
 
         // show error
-        if (${error != null}){
-            showErrorMsg("${error.event}", "${error.message}");
+        if (${pageElement.error}){
+            showErrorMsg("RequestID: ${error.requestId}", "Error message: ${error.message}");
         } else if (${pageElement.response}) {
-            renderStripeElements("${pi.clientSecret}","${account.accountPublishKey}");
+            renderStripeElements("${pi.clientSecret}","${pageElement.publishKey}");
         }
 
         // retrieve a PaymentIntent
-       $('.pi-retrieve-btn').on('click', function(){
-           $.ajax({
-               type : "POST",
-               url : "retrieve-paymentintent",
-               data : "pi=${pi.id}&acct=" + $('#account-name').val(),
-               dataType : "json",
-               success: function(result){
-                   console.log(result.body);
-                   if (result.error){
-                       console.log("Error");
-                       showErrorMsg(result.body.code, "Request ID: " + result.body.requestId + " Message: " + result.body.message);
-                   } else {
-                       console.log("Success");
-                       $('.retrieve-pi-row').show();
-                       $('.pi-details-response').html(JSON.stringify(result.body, undefined, 2));
-                   }
+        $('.pi-retrieve-btn').on('click', function(){
+            $.ajax({
+                type : "POST",
+                url : "retrieve-paymentintent",
+                data : "pi=${pi.id}",
+                dataType : "json",
+                success: function(result){
+                    console.log(result.body);
+                    if (result.error){
+                        console.log("Error");
+                        showErrorMsg(result.body.code, "Request ID: " + result.body.requestId + " Message: " + result.body.message);
+                    } else {
+                        console.log("Success");
+                        $('.retrieve-pi-row').show();
+                        $('.pi-details-response').html(JSON.stringify(result.body, undefined, 2));
+                    }
 
-               }
-           });
+                }
+            });
 
-       });
+        });
     });
 
     // Stripe elements
@@ -533,7 +468,6 @@
          * standard card details
          */
         var source = "${pi.source}";
-        console.log(source);
         if (source == ""){
             var cardElement = elements.create('card', {hidePostalCode:true, style:style});
             cardElement.mount('#card-element');
@@ -562,13 +496,14 @@
             var cardholderName = $('#cardholder-name').val();
             var saveToCustomer = $('#saveToCustomer').prop('checked');
 
-            if (source == ""){
+            if (source){
                 stripe.handleCardPayment(
                     clientSecret, cardElement, {
                         source_data: {
                             owner: { name: cardholderName }
                         },
-                        save_payment_method : saveToCustomer
+
+                        save_source_to_customer : saveToCustomer
                     }
                 ).then(function (result) {
                     handleResult(result);
@@ -584,32 +519,13 @@
             }
 
         });
-
-        $('#source-button').on('click', function(){
-            stripe.createSource(cardElement, {
-                type: 'card',
-                owner: {
-                    name: 'John Smith',
-                }
-            }).then(function(result) {
-                console.log(result.source);
-                $('.source-id-value').html(result.source.id);
-            });
-
-        });
-
-        // retrieve payment intent details
-        $('.pi-id').on('click', function()
-        {
-            console.log("${account.accountSecretKey}");
-            retrieveDetails("https://api.stripe.com/v1/payment_intents/" + $(this).get(0).id, "${account.accountSecretKey}");
-        });
     }
     function handleResult(result){
         // keep card form on the left
         var hasResponse = $('.pi-response:visible').length;
+        console.log(hasResponse);
         if (hasResponse===0){
-            $('.card-form').toggleClass('col-md-offset-2', 500);
+            $('.card-form').toggleClass('col-md-offset-3', 500);
         }
 
         // remove pi-response-log
@@ -633,9 +549,29 @@
             $('.pi-retrieve').show();
         }
     }
+    function showErrorMsg(title, msg){
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-full-width",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "0",
+            "extendedTimeOut": "0",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        toastr.error(msg, title);
+    }
 </script>
 
 
 </body>
 </html>
-

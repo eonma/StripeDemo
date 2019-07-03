@@ -35,17 +35,17 @@ public class CustomerController {
 
         //Stripe.apiKey = Constants.GB_PAYMENT_SK;
         try {
-            customerCollection = Customer.list(new HashMap<>());
+            customerCollection = CustomerWithPM.list(new HashMap<>());
         } catch (StripeException e) {
             e.printStackTrace();
         }
 
-        List<Customer> customers = customerCollection.getData();
+        List<CustomerWithPM> customers = customerCollection.getData();
 
 
-        Iterator<Customer> it = customers.iterator();
+        Iterator<CustomerWithPM> it = customers.iterator();
         while (it.hasNext()){
-            Customer customer = it.next();
+            CustomerWithPM customer = it.next();
             List<String> sources = new ArrayList<>();
             List<String> sourceTypes = new ArrayList<>();
             List<String> subscriptions = new ArrayList<>();

@@ -55,7 +55,7 @@
 		// Browser
 		factory( jQuery, window, document );
 	}
-};
+}
 (function( $, window, document, undefined ) {
 	"use strict";
 
@@ -6379,7 +6379,7 @@
 	
 			_fnCallbackFire( settings, 'aoStateLoaded', 'stateLoaded', [settings, state] );
 			callback();
-		};
+		}
 	
 		if ( ! settings.oFeatures.bStateSave ) {
 			callback();
@@ -10123,7 +10123,7 @@
 		 *      } );
 		 *    } );
 		 */
-		"aLengthMenu": [ 10, 25, 50, 100 ],
+		"aLengthMenu": [ 5, 25, 50, 100 ],
 	
 	
 		/**

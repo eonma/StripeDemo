@@ -3,21 +3,11 @@ package stripe.api.playground.controller;
 
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,31 +24,31 @@ public class HelloController {
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public String printHello(Model model){
         model.addAttribute("message", "message");
-        return "hello";
+        return "WEB-INF/views/hello.jsp";
     }
 
     @RequestMapping(value = "/element", method = RequestMethod.GET)
     public String showElement(Model model){
         model.addAttribute("message", "message");
-        return "elements";
+        return "WEB-INF/views/elements.jsp";
     }
 
     @RequestMapping(value = "/matches", method = RequestMethod.GET)
     public String showMatchesView(Model model){
 
-        return "matches";
+        return "WEB-INF/views/matches.jsp";
     }
 
     @RequestMapping(value = "/ecp", method = RequestMethod.GET)
     public String showECPView(Model model){
 
-        return "ecp";
+        return "WEB-INF/views/ecp.jsp";
     }
 
     @RequestMapping(value = "/confirm", method = RequestMethod.GET)
     public String showConfirmView(Model model){
 
-        return "ecp_confirm";
+        return "WEB-INF/views/ecp_confirm.jsp";
     }
 
     @RequestMapping(value = "/calculateShipping", method = RequestMethod.POST)
@@ -73,25 +63,31 @@ public class HelloController {
     @RequestMapping(value = "/green_flag", method = RequestMethod.GET)
     public String showGFView(Model model){
 
-        return "green_flag";
+        return "WEB-INF/views/green_flag.jsp";
     }
 
     @RequestMapping(value = "/plum_guide", method = RequestMethod.GET)
     public String showPGView(Model model){
 
-        return "mockups/plum_guide";
+        return "WEB-INF/views/mockups/plum_guide.jsp";
+    }
+
+    @RequestMapping(value = "/moonpig", method = RequestMethod.GET)
+    public String showMPView(Model model){
+
+        return "WEB-INF/views/mockups/moonpig.jsp";
     }
 
     @RequestMapping(value = "/event", method = RequestMethod.GET)
     public String showEvent(Model model){
         model.addAttribute("message", "message");
-        return "webhook";
+        return "WEB-INF/views/webhook.jsp";
     }
 
     @RequestMapping(value = "/paypal", method = RequestMethod.GET)
     public String showPPISU(Model model){
         model.addAttribute("message", "message");
-        return "pp_isu";
+        return "WEB-INF/views/pp_isu.jsp";
     }
 
 

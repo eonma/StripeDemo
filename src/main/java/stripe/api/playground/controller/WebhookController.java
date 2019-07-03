@@ -88,14 +88,6 @@ public class WebhookController {
         }
     }
 
-    private void singleWebhookOutput(PrintWriter writer){
-        writer.println("data: " + webhookContent + "\n");
-        if (StripeDemoUtil.isNotEmpty(webhookContent)){
-            webhookContent = "";
-        }
-
-    }
-
     private void webhookCollectionOutput(PrintWriter writer){
         if (webhookCollection != null){
             writer.println("data: " + webhookCollection.toJSON().replaceAll("\\s", "") + "\n");
@@ -104,8 +96,5 @@ public class WebhookController {
         } else {
             writer.println("data: null" + "\n");
         }
-
-
-
     }
 }

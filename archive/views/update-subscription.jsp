@@ -48,7 +48,7 @@
 <!-- WRAPPER -->
 <div id="wrapper">
     <!-- NAVBAR -->
-    <jsp:include page='../navbar.jsp'/>
+    <jsp:include page='../../src/main/webapp/WEB-INF/views/navbar.jsp'/>
     <!-- END NAVBAR -->
     <!-- MAIN -->
     <div class="main">

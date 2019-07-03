@@ -44,7 +44,7 @@
 
 <div id="wrapper">
     <!-- NAVBAR -->
-    <jsp:include page='../navbar.jsp'/>
+    <jsp:include page='../../src/main/webapp/WEB-INF/views/navbar.jsp'/>
     <!-- END NAVBAR -->
 
     <!-- MAIN -->
@@ -70,12 +70,16 @@
                             <span class="client-server stripe-blue">SERVER SIDE</span>
                             <h3 class="panel-title">Create a PaymentIntent - server side</h3>
 
-                            <select id="stripe-account" class="panel-title right acct-sel" style="position: absolute;left: 70%;">
-                                <option value="" label="Select account"/>
-                                <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
-                                    <option value="${account.accountName}" label="Account - ${account.accountName}"/>
-                                </c:forEach>
-                            </select>
+                            <!-- LIST ACCOUNTS -->
+                            <div class="account-select right tab">
+                                <select id="stripe-account" class="panel-title acct-sel" >
+                                    <option value="" label="Select account"/>
+                                    <c:forEach items="${viewObj.allAccounts.accountPropertiesList}" var="account">
+                                        <option value="${account.accountName}" label="Account - ${account.accountName}"/>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <!-- END LIST ACCOUNTS -->
 
                             <ul class="nav nav-tabs pull-right">
                                 <li id="tabReq" class="active"><a href="#reqTab" data-toggle="tab"></i> REQUEST </a></li>

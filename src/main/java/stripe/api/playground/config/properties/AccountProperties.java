@@ -14,14 +14,16 @@ public class AccountProperties {
     private String accountName;
     private String accountPublishKey;
     private String accountSecretKey;
+    private String accountClientId;
 
     public AccountProperties() {
     }
 
-    public AccountProperties(String accountName, String accountPublishKey, String accountSecretKey) {
+    public AccountProperties(String accountName, String accountPublishKey, String accountSecretKey, String accountClientId) {
         this.accountName = accountName;
         this.accountPublishKey = accountPublishKey;
         this.accountSecretKey = accountSecretKey;
+        this.accountClientId = accountClientId;
     }
 
     public String getAccountName() {
@@ -46,6 +48,14 @@ public class AccountProperties {
 
     public void setAccountSecretKey(String accountSecretKey) {
         this.accountSecretKey = accountSecretKey;
+    }
+
+    public String getAccountClientId() {
+        return accountClientId;
+    }
+
+    public void setAccountClientId(String accountClientId) {
+        this.accountClientId = accountClientId;
     }
 
     /**

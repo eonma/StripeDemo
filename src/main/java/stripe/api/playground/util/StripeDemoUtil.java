@@ -1,8 +1,11 @@
 package stripe.api.playground.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.exception.StripeException;
 import stripe.api.playground.config.properties.AccountProperties;
 import stripe.api.playground.config.properties.AccountPropertyCollections;
+import stripe.api.playground.model.PlaygroundResponse;
+import stripe.api.playground.model.RequestError;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -152,8 +155,6 @@ public class StripeDemoUtil {
         return publishKey;
     }
 
-
-
     public static Map<String, Object> getConditions(Boolean isNew) throws ParseException {
 
         Map<String, Object> conditions = new HashMap<>();
@@ -177,5 +178,15 @@ public class StripeDemoUtil {
     public static Map<String, Object> convertJsonToMap(String jsonStr) throws IOException {
         Map<String,Object> map = new ObjectMapper().readValue(jsonStr, HashMap.class);
         return map;
+    }
+
+    public static PlaygroundResponse setException(PlaygroundResponse response, Exception e){
+        response.setCode(ResponseCode.ERROR);
+        if (e instanceof StripeException){
+            response.setApiResponse(new RequestError(((StripeException) e).getRequestId(), ((StripeException) e).getCode(), e.getMessage()).toJSON());
+        } else {
+            response.setApiResponse(new RequestError("", "Request Error", e.getMessage()).toJSON());
+        }
+        return response;
     }
 }

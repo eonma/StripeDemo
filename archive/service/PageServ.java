@@ -1,6 +1,5 @@
 package stripe.api.playground.service;
 
-import com.stripe.model.PaymentIntent;
 import stripe.api.playground.model.Address;
 import stripe.api.playground.model.PageElement;
 import stripe.api.playground.model.PaymentIntentReq;
